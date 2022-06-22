@@ -27,7 +27,7 @@ class BoardServiceTest extends BaseTestClass {
     BoardService service;
 
     @Test
-    public void testd() {
+    public void findAllWithReturnValues() {
         when(repository.findAll()).thenReturn(defaultBoardList);
         assertEquals(1, service.findAll().size());
         assertEquals(BoardDtoResponse.class, service.findAll().get(0).getClass());
