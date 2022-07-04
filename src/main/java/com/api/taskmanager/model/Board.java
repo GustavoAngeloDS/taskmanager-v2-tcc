@@ -1,12 +1,12 @@
 package com.api.taskmanager.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "BOARDS")
@@ -27,8 +27,11 @@ public class Board {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_id", updatable = false)
     private User owner;
+
+    @OneToMany(mappedBy = "board")
+    private List<Stack> stackList;
 
     public Board(String name, String description, User owner) {
         this.name = name;

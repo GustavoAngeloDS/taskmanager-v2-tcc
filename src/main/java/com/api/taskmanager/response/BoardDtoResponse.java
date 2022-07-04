@@ -1,5 +1,6 @@
 package com.api.taskmanager.response;
 
+import com.api.taskmanager.model.Board;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,4 +13,9 @@ public class BoardDtoResponse {
     private String name;
     private String description;
     private UserDtoResponse owner;
+
+    public static BoardDtoResponse fromEntity(Board board) {
+        return new BoardDtoResponse(board.getId(), board.getName(), board.getDescription(),
+                UserDtoResponse.fromEntity(board.getOwner()));
+    }
 }

@@ -72,9 +72,9 @@ public class BoardService {
                 userDtoResponse);
     }
 
-    public BoardDtoResponse update(Board updatedBoard) {
-        Board savedBoard = repository.save(updatedBoard);
-        User owner = savedBoard.getOwner();
+    public BoardDtoResponse update(Board board) {
+        Board updatedBoard = repository.save(board);
+        User owner = updatedBoard.getOwner();
 
         UserDtoResponse userDtoResponse = UserDtoResponse.builder()
                 .id(owner.getId())
@@ -83,7 +83,7 @@ public class BoardService {
                 .nickName(owner.getNickName())
                 .phoneNumber(owner.getPhoneNumber()).build();
 
-        return new BoardDtoResponse(savedBoard.getId(), savedBoard.getName(), savedBoard.getDescription(),
+        return new BoardDtoResponse(updatedBoard.getId(), updatedBoard.getName(), updatedBoard.getDescription(),
                 userDtoResponse);
     }
 
