@@ -1,5 +1,6 @@
 package com.api.taskmanager.service;
 
+import com.api.taskmanager.exception.TaskManagerCustomException;
 import com.api.taskmanager.model.Board;
 import com.api.taskmanager.model.User;
 import com.api.taskmanager.repository.BoardRepository;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.api.taskmanager.exception.TaskManagerCustomException.ID_NOT_FOUND;
 
 @Service
 public class BoardService {
@@ -42,8 +45,7 @@ public class BoardService {
 
     public BoardDtoResponse findById(Long id) {
         Optional<Board> board = repository.findById(id);
-        if (!board.isPresent())
-            return new BoardDtoResponse();
+        if (!board.isPresent()) throw new TaskManagerCustomException(ID_NOT_FOUND);
 
         User owner = board.get().getOwner();
         UserDtoResponse userDtoResponse = UserDtoResponse.builder()

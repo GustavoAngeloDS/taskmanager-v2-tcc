@@ -1,5 +1,6 @@
 package com.api.taskmanager.service;
 
+import com.api.taskmanager.exception.TaskManagerCustomException;
 import com.api.taskmanager.model.Task;
 import com.api.taskmanager.repository.TaskRepository;
 import com.api.taskmanager.response.TaskDtoResponse;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.api.taskmanager.exception.TaskManagerCustomException.ID_NOT_FOUND;
 
 @Service
 public class TaskService {
@@ -30,8 +33,7 @@ public class TaskService {
 
     public TaskDtoResponse findById(Long id) {
         Optional<Task> optionalTask = repository.findById(id);
-        if (!optionalTask.isPresent())
-            return new TaskDtoResponse();
+        if (!optionalTask.isPresent()) throw new TaskManagerCustomException(ID_NOT_FOUND);
 
         Task task = optionalTask.get();
         return TaskDtoResponse.fromEntity(task);
