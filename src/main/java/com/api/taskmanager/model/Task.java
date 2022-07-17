@@ -24,4 +24,9 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "stack_id", nullable = false, updatable = true, insertable = true)
     private Stack stack;
+
+    public Task(String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
 }
