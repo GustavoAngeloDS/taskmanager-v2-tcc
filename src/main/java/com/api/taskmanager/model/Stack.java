@@ -26,4 +26,8 @@ public class Stack implements Serializable {
 
     @OneToMany(mappedBy = "stack")
     private List<Task> taskList;
+
+    public Stack(String name) {
+        this.name = name;
+    }
 }

@@ -33,9 +33,8 @@ public class Board {
     @OneToMany(mappedBy = "board")
     private List<Stack> stackList;
 
-    public Board(String name, String description, User owner) {
+    public Board(String name, String description) {
         this.name = name;
         this.description = description;
-        this.owner = owner;
     }
 }

@@ -28,19 +28,10 @@ public class User {
     @JsonIgnore
     private List<Board> boards;
 
-    public User(Long id, String email, String username, String nickName, String phoneNumber) {
-        this.id = id;
+    public User(String email, String username, String nickName, String phoneNumber) {
         this.email = email;
         this.username = username;
         this.nickName = nickName;
         this.phoneNumber = phoneNumber;
-    }
-
-    public User(String email, String username, String nickName, String phoneNumber, List<Board> boards) {
-        this.email = email;
-        this.username = username;
-        this.nickName = nickName;
-        this.phoneNumber = phoneNumber;
-        this.boards = boards;
     }
 }
