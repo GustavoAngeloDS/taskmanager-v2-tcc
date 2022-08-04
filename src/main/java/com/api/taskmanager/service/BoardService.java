@@ -29,16 +29,7 @@ public class BoardService {
         List<BoardDtoResponse> boardDtoResponseList = new ArrayList<>();
 
         repository.findAll().forEach(board -> {
-            User owner = board.getOwner();
-            UserDtoResponse userDtoResponse = UserDtoResponse.builder()
-                    .id(owner.getId())
-                    .email(owner.getEmail())
-                    .username(owner.getUsername())
-                    .nickName(owner.getNickName())
-                    .phoneNumber(owner.getPhoneNumber()).build();
-
-            boardDtoResponseList.add(new BoardDtoResponse(board.getId(), board.getName(), board.getDescription(),
-                    userDtoResponse));
+            boardDtoResponseList.add(new BoardDtoResponse(board.getId(), board.getName(), board.getDescription()));
         });
         return boardDtoResponseList;
     }
@@ -46,47 +37,18 @@ public class BoardService {
     public BoardDtoResponse findById(Long id) {
         Optional<Board> board = repository.findById(id);
         if (!board.isPresent()) throw new TaskManagerCustomException(ID_NOT_FOUND);
-
-        User owner = board.get().getOwner();
-        UserDtoResponse userDtoResponse = UserDtoResponse.builder()
-                .id(owner.getId())
-                .email(owner.getEmail())
-                .username(owner.getUsername())
-                .nickName(owner.getNickName())
-                .phoneNumber(owner.getPhoneNumber()).build();
-
-        return new BoardDtoResponse(board.get().getId(), board.get().getName(), board.get().getDescription(),
-                userDtoResponse);
+        return new BoardDtoResponse(board.get().getId(), board.get().getName(), board.get().getDescription());
     }
 
     public BoardDtoResponse create(Board board) {
         Board createdBoard = repository.save(board);
-        User owner = createdBoard.getOwner();
-
-        UserDtoResponse userDtoResponse = UserDtoResponse.builder()
-                .id(owner.getId())
-                .email(owner.getEmail())
-                .username(owner.getUsername())
-                .nickName(owner.getNickName())
-                .phoneNumber(owner.getPhoneNumber()).build();
-
-        return new BoardDtoResponse(createdBoard.getId(), createdBoard.getName(), createdBoard.getDescription(),
-                userDtoResponse);
+        return new BoardDtoResponse(createdBoard.getId(), createdBoard.getName(), createdBoard.getDescription());
     }
 
     public BoardDtoResponse update(Board board) {
         Board updatedBoard = repository.save(board);
-        User owner = updatedBoard.getOwner();
 
-        UserDtoResponse userDtoResponse = UserDtoResponse.builder()
-                .id(owner.getId())
-                .email(owner.getEmail())
-                .username(owner.getUsername())
-                .nickName(owner.getNickName())
-                .phoneNumber(owner.getPhoneNumber()).build();
-
-        return new BoardDtoResponse(updatedBoard.getId(), updatedBoard.getName(), updatedBoard.getDescription(),
-                userDtoResponse);
+        return new BoardDtoResponse(updatedBoard.getId(), updatedBoard.getName(), updatedBoard.getDescription());
     }
 
     public void remove(Board board) {

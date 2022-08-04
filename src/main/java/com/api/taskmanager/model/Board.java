@@ -26,7 +26,7 @@ public class Board {
 
     private String description;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "owner_id", updatable = false)
     private User owner;
 

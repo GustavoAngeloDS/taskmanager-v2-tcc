@@ -12,10 +12,8 @@ public class BoardDtoResponse {
     private Long id;
     private String name;
     private String description;
-    private UserDtoResponse owner;
 
     public static BoardDtoResponse fromEntity(Board board) {
-        return new BoardDtoResponse(board.getId(), board.getName(), board.getDescription(),
-                UserDtoResponse.fromEntity(board.getOwner()));
+        return new BoardDtoResponse(board.getId(), board.getName(), board.getDescription());
     }
 }
