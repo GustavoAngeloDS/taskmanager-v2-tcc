@@ -1,17 +1,18 @@
 package com.api.taskmanager.controller;
 
 import com.api.taskmanager.model.Stack;
-import com.api.taskmanager.model.User;
 import com.api.taskmanager.service.StackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("stacks")
+@PreAuthorize("hasRole('ROLE_USER')")
 public class StackController {
 
     private StackService service;
@@ -21,10 +22,10 @@ public class StackController {
         this.service = stackService;
     }
 
-    @GetMapping()
-    public ResponseEntity<List<?>> findAll() {
-        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
-    }
+//    @GetMapping()
+//    public ResponseEntity<List<?>> findAll() {
+//        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findStackById(@PathVariable(name = "id") Long id) {

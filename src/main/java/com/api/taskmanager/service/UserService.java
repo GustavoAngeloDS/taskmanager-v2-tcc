@@ -5,17 +5,19 @@ import com.api.taskmanager.model.User;
 import com.api.taskmanager.repository.UserRepository;
 import com.api.taskmanager.response.UserDtoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.api.taskmanager.exception.TaskManagerCustomException.ID_NOT_FOUND;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private UserRepository repository;
 
@@ -55,5 +57,11 @@ public class UserService {
 
     public void remove(User user) {
         repository.delete(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = repository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return user;
     }
 }
