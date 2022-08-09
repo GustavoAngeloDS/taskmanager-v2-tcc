@@ -2,6 +2,7 @@ package com.api.taskmanager.controller;
 
 import com.api.taskmanager.model.Board;
 import com.api.taskmanager.service.BoardService;
+import com.api.taskmanager.service.StackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,37 +17,77 @@ import java.util.List;
 @PreAuthorize("hasRole('ROLE_USER')")
 public class BoardController {
 
-    private BoardService service;
+    private BoardService boardService;
+    private StackService stackService;
 
     @Autowired
-    BoardController(BoardService boardService) {
-        this.service = boardService;
+    BoardController(BoardService boardService, StackService stackService) {
+        this.boardService = boardService;
+        this.stackService = stackService;
     }
-//
-//    @GetMapping()
-//    public ResponseEntity<List<?>> findAll() {
-//        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
-//    }
+
+    @GetMapping
+    public ResponseEntity<List<?>> findAllBoards(Principal principal) {
+        return new ResponseEntity<>(boardService.findAll(principal), HttpStatus.OK);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findBoardById(@PathVariable(name = "id") Long id, Principal principal) {
-        System.out.println(principal.getName());
-        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
+        return new ResponseEntity<>(boardService.findById(id, principal), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<?> createBoard(@RequestBody Board board) {
-        return new ResponseEntity<>(service.create(board), HttpStatus.CREATED);
+    public ResponseEntity<?> createBoard(@RequestBody Board board, Principal principal) {
+        return new ResponseEntity<>(boardService.create(board, principal), HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public ResponseEntity<?> updateBoard(@RequestBody Board board) {
-        return new ResponseEntity<>(service.update(board), HttpStatus.OK);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateBoard(@PathVariable(name = "id") Long id, Principal principal) {
+        return new ResponseEntity<>(boardService.update(id, principal), HttpStatus.OK);
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> removeBoard(@RequestBody Board board) {
-        service.remove(board);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> removeBoard(@PathVariable(name = "id") Long id, Principal principal) {
+        boardService.remove(id, principal);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+
+
+
+
+
+
+
+
+//
+//
+//
+//
+//    @GetMapping
+//    public ResponseEntity<List<?>> findAllStacks(Principal principal) {
+//        return new ResponseEntity<>(stackService.findAll(principal), HttpStatus.OK);
+//    }
+//
+//    @GetMapping("/{id}")
+//    public ResponseEntity<?> findStackById(@PathVariable(name = "id") Long id, Principal principal) {
+//        return new ResponseEntity<>(stackService.findById(id, principal), HttpStatus.OK);
+//    }
+//
+//    @PostMapping
+//    public ResponseEntity<?> createStack(@RequestBody Board board, Principal principal) {
+//        return new ResponseEntity<>(stackService.create(board, principal), HttpStatus.CREATED);
+//    }
+//
+//    @PutMapping("/{id}")
+//    public ResponseEntity<?> updateStack(@PathVariable(name = "id") Long id, Principal principal) {
+//        return new ResponseEntity<>(stackService.update(id, principal), HttpStatus.OK);
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<?> removeStack(@PathVariable(name = "id") Long id, Principal principal) {
+//        stackService.remove(id, principal);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 }

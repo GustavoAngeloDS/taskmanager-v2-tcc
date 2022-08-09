@@ -31,7 +31,6 @@ public class User implements UserDetails {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "owner")
-    @JsonIgnore
     private List<Board> boards;
 
     @ManyToMany(fetch = FetchType.EAGER)

@@ -28,7 +28,7 @@ public class UserService implements UserDetailsService {
 
     public List<UserDtoResponse> findAll() {
         List<UserDtoResponse> userDtoResponseList = new ArrayList<>();
-        repository.findAll().forEach(user -> userDtoResponseList.add(
+        repository.findAll().forEach(user -> userDtoResponseList.add (
                 new UserDtoResponse(user.getId(), user.getEmail(), user.getUsername(), user.getNickName(),
                         user.getPhoneNumber()))
         );
