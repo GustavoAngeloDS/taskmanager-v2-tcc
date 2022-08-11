@@ -84,16 +84,6 @@ public class PrincipalBoardManagementController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
-
-
-
-
-
-
-
-
-
     @GetMapping("/{boardId}/tasks")
     public ResponseEntity<List<?>> findAllTasksByBoard(@PathVariable(name = "boardId") UUID boardId, Principal principal) {
         return new ResponseEntity<>(taskService.findAllByBoardId(boardId, principal), HttpStatus.OK);
@@ -118,7 +108,6 @@ public class PrincipalBoardManagementController {
     public ResponseEntity<?> updateTaskStack(@PathVariable(name = "boardId") UUID boardId, @PathVariable(name = "taskId") UUID taskId, @RequestBody Task task, Principal principal) {
         return new ResponseEntity<>(taskService.updateTaskStack(boardId, taskId, task, principal), HttpStatus.OK);
     }
-
 
     @DeleteMapping("/{boardId}/tasks/{taskId}")
     public ResponseEntity<?> removeTask(@PathVariable(name = "boardId") UUID boardId, @PathVariable(name = "taskId") UUID taskId, Principal principal) {

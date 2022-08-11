@@ -41,6 +41,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> removeUser(@PathVariable(name = "id") UUID id, Principal principal) {
         service.remove(id, principal);
         return new ResponseEntity<>(HttpStatus.OK);
