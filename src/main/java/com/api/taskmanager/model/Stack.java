@@ -3,10 +3,12 @@ package com.api.taskmanager.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "STACKS")
@@ -15,12 +17,14 @@ import java.util.List;
 @AllArgsConstructor
 public class Stack implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
+    @Setter
     private String name;
 
-    @ManyToOne
+    @Setter
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "board_id", updatable = false)
     private Board board;
 

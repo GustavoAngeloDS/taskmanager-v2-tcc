@@ -8,6 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.List;
+import java.util.UUID;
+
 @RestController
 @RequestMapping("users")
 public class UserController {
@@ -19,15 +23,10 @@ public class UserController {
         this.service = userService;
     }
 
-//    @GetMapping()
-//    public ResponseEntity<List<?>> findAll() {
-//        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
-//    }
-
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<?> findUserById(@PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
+    public ResponseEntity<?> findUserById(@PathVariable(name = "id") UUID id, Principal principal) {
+        return new ResponseEntity<>(service.findById(id, principal), HttpStatus.OK);
     }
 
     @PostMapping
@@ -35,15 +34,15 @@ public class UserController {
         return new ResponseEntity<>(service.create(user), HttpStatus.CREATED);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<?> updateUser(@RequestBody User user) {
-        return new ResponseEntity<>(service.update(user), HttpStatus.OK);
+    public ResponseEntity<?> updateUser(@RequestBody User user, @PathVariable(name = "id") UUID id, Principal principal) {
+        return new ResponseEntity<>(service.update(id, user, principal), HttpStatus.OK);
     }
 
-//    @DeleteMapping
-//    public ResponseEntity<?> removeUser(@RequestBody User user) {
-//        service.remove(user);
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> removeUser(@PathVariable(name = "id") UUID id, Principal principal) {
+        service.remove(id, principal);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

@@ -6,12 +6,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class UserDtoResponse {
-    private Long id;
+    private UUID id;
     private String email;
     private String username;
     private String nickName;

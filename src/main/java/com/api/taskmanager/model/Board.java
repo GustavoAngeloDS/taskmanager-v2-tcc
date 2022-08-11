@@ -1,12 +1,10 @@
 package com.api.taskmanager.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "BOARDS")
@@ -17,18 +15,27 @@ import java.util.List;
 public class Board {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private Long id;
+    private UUID id;
 
+    @Setter
     @Column(nullable = false)
     private String name;
 
+    @Setter
     private String description;
 
-    @ManyToOne
+    @Setter
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id", updatable = false)
     private User owner;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "board_users",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "board_id"))
+    private List<User> memberList;
 
     @OneToMany(mappedBy = "board")
     private List<Stack> stackList;

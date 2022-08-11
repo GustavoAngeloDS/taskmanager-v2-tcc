@@ -3,8 +3,10 @@ package com.api.taskmanager.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,14 +16,17 @@ import javax.persistence.*;
 public class Task {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
+    @Setter
     private String title;
 
+    @Setter
     private String description;
 
-    @ManyToOne
+    @Setter
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "stack_id", nullable = false, updatable = true, insertable = true)
     private Stack stack;
 

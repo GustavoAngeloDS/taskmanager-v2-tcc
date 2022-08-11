@@ -1,6 +1,8 @@
 package com.api.taskmanager.model;
 
 import com.api.taskmanager.enums.RoleName;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -8,6 +10,8 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "ROLES")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Role implements GrantedAuthority, Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -15,9 +19,8 @@ public class Role implements GrantedAuthority, Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roleId;
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true, updatable = false)
     private RoleName roleName;
-
 
     @Override
     public String getAuthority() {

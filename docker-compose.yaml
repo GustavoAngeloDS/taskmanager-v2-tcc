@@ -1,12 +1,12 @@
 version: "3.1"
 
 services:
-  mysql_database:
-    image: mysql
+  postgres-db:
+    image: postgres
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=jardim4565
-      - MYSQL_DATABASE=taskmanager
-      - MYSQL_ROOT_HOST=%
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: jardim4565
+      POSTGRES_DB: taskmanager
     ports:
-      - "3306:3306"
+      - "5432:5432"

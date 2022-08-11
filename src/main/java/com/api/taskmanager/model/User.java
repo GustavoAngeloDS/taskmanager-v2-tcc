@@ -1,15 +1,16 @@
 package com.api.taskmanager.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "USERS")
@@ -19,24 +20,28 @@ import java.util.List;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
+    @Column(unique = true, nullable = false, updatable = false)
     private String email;
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false, updatable = false)
     private String username;
+    @Setter
     @Column(nullable = false)
     private String password;
+    @Setter
     private String nickName;
+    @Setter
     private String phoneNumber;
 
     @OneToMany(mappedBy = "owner")
     private List<Board> boards;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "USERS_ROLES",
+    @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @Setter
     private List<Role> roles;
 
     public User(String email, String username, String nickName, String phoneNumber) {
