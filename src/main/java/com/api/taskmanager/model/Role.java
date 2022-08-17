@@ -3,16 +3,18 @@ package com.api.taskmanager.model;
 import com.api.taskmanager.enums.RoleName;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "ROLES")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Role implements GrantedAuthority, Serializable {
+public class Role extends AbstractEntity implements GrantedAuthority, Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id

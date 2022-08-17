@@ -104,9 +104,9 @@ public class PrincipalBoardManagementController {
         return new ResponseEntity<>(taskService.includeTaskMember(boardId, stackId, memberId, principal), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{boardId}/stacks/{stackId}/tasks/{taskId}")
-    public ResponseEntity<?> updateTask(@PathVariable(name = "boardId") UUID boardId, @PathVariable(name = "stackId") UUID stackId, @PathVariable(name = "taskId") UUID taskId, @RequestBody Task task, Principal principal) {
-        return new ResponseEntity<>(taskService.update(boardId, stackId, taskId, task, principal), HttpStatus.OK);
+    @PutMapping("/{boardId}/tasks/{taskId}")
+    public ResponseEntity<?> updateTask(@PathVariable(name = "boardId") UUID boardId, @PathVariable(name = "taskId") UUID taskId, @RequestBody Task task, Principal principal) {
+        return new ResponseEntity<>(taskService.update(boardId, taskId, task, principal), HttpStatus.OK);
     }
 
     @PutMapping("/{boardId}/tasks/{taskId}/change-stack/{newStackId}")

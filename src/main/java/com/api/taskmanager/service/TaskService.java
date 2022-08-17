@@ -67,7 +67,7 @@ public class TaskService {
         return TaskDtoResponse.fromEntity(createdTask);
     }
 
-    public TaskDtoResponse update(UUID boardId, UUID stackId, UUID taskId, Task newTaskData, Principal principal) {
+    public TaskDtoResponse update(UUID boardId, UUID taskId, Task newTaskData, Principal principal) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
         if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));

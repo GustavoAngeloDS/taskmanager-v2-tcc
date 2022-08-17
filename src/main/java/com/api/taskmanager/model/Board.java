@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class Board {
+public class Board extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,8 +34,8 @@ public class Board {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "board_users",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "board_id"))
+            joinColumns = @JoinColumn(name = "board_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> memberList;
 
     @OneToMany(mappedBy = "board", fetch = FetchType.EAGER)

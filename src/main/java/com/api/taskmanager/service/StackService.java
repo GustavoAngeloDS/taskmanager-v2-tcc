@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.api.taskmanager.exception.TaskManagerCustomException.FORBIDDEN;
 import static com.api.taskmanager.exception.TaskManagerCustomException.ID_NOT_FOUND;
@@ -37,6 +35,8 @@ public class StackService {
         stackRepository.findAllByBoardId(boardId).forEach(stack -> {
             stackDtoResponseList.add(StackDtoResponse.fromEntity(stack));
         });
+
+        Collections.sort(stackDtoResponseList, Comparator.comparing(StackDtoResponse::getCreatedOn));
         return stackDtoResponseList;
     }
 

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.*;
@@ -13,7 +14,7 @@ import java.util.*;
 @Getter
 @Table(name = "TASKS")
 @Entity
-public class Task {
+public class Task extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

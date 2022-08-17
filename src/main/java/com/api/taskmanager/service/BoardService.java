@@ -30,7 +30,7 @@ public class BoardService {
     public List<BoardDtoResponse> findAll(Principal principal) {
         List<BoardDtoResponse> boardDtoResponseList = new ArrayList<>();
 
-        repository.findAllBoardsByOwnerUsername(principal.getName()).forEach(board -> {
+        repository.findAllBoardsByUsername(principal.getName()).forEach(board -> {
             boardDtoResponseList.add(BoardDtoResponse.fromEntity(board));
         });
         return boardDtoResponseList;

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -16,9 +17,11 @@ import java.util.stream.Collectors;
 public class StackDtoResponse {
     private UUID id;
     private String name;
+    private Date createdOn;
     private Set<TaskDtoResponse> taskList;
 
     public static StackDtoResponse fromEntity(Stack stack) {
-        return new StackDtoResponse(stack.getId(), stack.getName(), stack.getTaskList().stream().map(TaskDtoResponse::fromEntity).collect(Collectors.toSet()));
+        return new StackDtoResponse(stack.getId(), stack.getName(), stack.getCreatedOn(), stack.getTaskList()
+                .stream().map(TaskDtoResponse::fromEntity).collect(Collectors.toSet()));
     }
 }
