@@ -30,13 +30,9 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<UserDtoResponse> findAll() {
-        List<UserDtoResponse> userDtoResponseList = new ArrayList<>();
-        repository.findAll().forEach(user -> userDtoResponseList.add (
-                new UserDtoResponse(user.getId(), user.getEmail(), user.getUsername(), user.getNickName(),
-                        user.getPhoneNumber()))
-        );
-        return userDtoResponseList;
+    public UserDtoResponse authenticate(String username) {
+        User user = repository.findByUsername(username).orElseThrow(() -> new TaskManagerCustomException(INVALID_CREDENTIALS));
+        return UserDtoResponse.fromEntity(user);
     }
 
     public UserDtoResponse findById(UUID id, Principal principal) {
@@ -51,7 +47,7 @@ public class UserService implements UserDetailsService {
         consistInputData(user);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(Arrays.asList(new Role(1L, RoleName.ROLE_USER)));
+        user.setRoles(Set.of(new Role(1L, RoleName.ROLE_USER)));
 
         User createdUser = repository.save(user);
         return new UserDtoResponse(createdUser.getId(), createdUser.getEmail(), createdUser.getUsername(),

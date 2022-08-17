@@ -2,14 +2,15 @@ package com.api.taskmanager.controller;
 
 import com.api.taskmanager.model.User;
 import com.api.taskmanager.service.UserService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -32,6 +33,11 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody User user) {
         return new ResponseEntity<>(service.create(user), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/validateLogin")
+    public ResponseEntity<?> validateLogin(Principal principal) {
+        return new ResponseEntity<>(service.authenticate(principal.getName()), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")

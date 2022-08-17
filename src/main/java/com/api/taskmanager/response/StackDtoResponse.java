@@ -6,19 +6,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Getter
 public class StackDtoResponse {
     private UUID id;
     private String name;
-    private BoardDtoResponse board;
+    private Set<TaskDtoResponse> taskList;
 
     public static StackDtoResponse fromEntity(Stack stack) {
-        return new StackDtoResponse(stack.getId(), stack.getName(),
-                BoardDtoResponse.fromEntity(stack.getBoard()));
+        return new StackDtoResponse(stack.getId(), stack.getName(), stack.getTaskList().stream().map(TaskDtoResponse::fromEntity).collect(Collectors.toSet()));
     }
 }

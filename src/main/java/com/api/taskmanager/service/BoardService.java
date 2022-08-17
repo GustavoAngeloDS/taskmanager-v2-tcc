@@ -31,7 +31,7 @@ public class BoardService {
         List<BoardDtoResponse> boardDtoResponseList = new ArrayList<>();
 
         repository.findAllBoardsByOwnerUsername(principal.getName()).forEach(board -> {
-            boardDtoResponseList.add(new BoardDtoResponse(board.getId(), board.getName(), board.getDescription()));
+            boardDtoResponseList.add(BoardDtoResponse.fromEntity(board));
         });
         return boardDtoResponseList;
     }
@@ -40,13 +40,13 @@ public class BoardService {
         Board board = repository.findById(id).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
         if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
 
-        return new BoardDtoResponse(board.getId(), board.getName(), board.getDescription());
+        return BoardDtoResponse.fromEntity(board);
     }
 
     public BoardDtoResponse create(Board board, Principal principal) {
         board.setOwner(userService.findByUsername(principal.getName()));
         Board createdBoard = repository.save(board);
-        return new BoardDtoResponse(createdBoard.getId(), createdBoard.getName(), createdBoard.getDescription());
+        return BoardDtoResponse.fromEntity(createdBoard);
     }
 
     public BoardDtoResponse update(UUID boardId, Board newBoardData, Principal principal) {
@@ -57,7 +57,7 @@ public class BoardService {
         board.setName(newBoardData.getName());
 
         Board updatedBoard = repository.save(board);
-        return new BoardDtoResponse(updatedBoard.getId(), updatedBoard.getName(), updatedBoard.getDescription());
+        return BoardDtoResponse.fromEntity(updatedBoard);
     }
 
     public void remove(UUID boardId, Principal principal) {
@@ -68,6 +68,7 @@ public class BoardService {
     }
 
     private boolean hasAccess(Board board, Principal principal) {
-        return principal.getName().equals(board.getOwner().getUsername());
+        return (board.getMemberList().stream().filter((member) -> (member.getUsername().equals(principal.getName())))
+                .count() > 0 || board.getOwner().getUsername().equals(principal.getName()));
     }
 }

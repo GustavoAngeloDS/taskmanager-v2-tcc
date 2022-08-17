@@ -7,7 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -29,7 +30,7 @@ public class Stack implements Serializable {
     private Board board;
 
     @OneToMany(mappedBy = "stack")
-    private List<Task> taskList;
+    private Set<Task> taskList = new HashSet<>();
 
     public Stack(String name) {
         this.name = name;

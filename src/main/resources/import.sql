@@ -15,3 +15,5 @@ INSERT INTO stacks VALUES ('08c4a8df-a202-4f35-bf94-74055c06ac4b', 'DOING', '57a
 INSERT INTO stacks VALUES ('949c56df-7aac-44ab-b17e-aab7174eb841', 'FINISHED', '57a4489e-4b6b-4f4e-992d-fa3d0e50c6dc');
 
 INSERT INTO tasks VALUES ('14ce2e17-7ed9-40c0-8481-260231cbb772', 'Descrição teste', 'Título task teste', '581ab551-ef9d-4e33-8063-a50da09053d7');
+
+INSERT INTO task_users VALUES ('14ce2e17-7ed9-40c0-8481-260231cbb772', 'dfcfa272-4885-4801-a849-df07fc717627');

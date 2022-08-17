@@ -2,16 +2,14 @@ package com.api.taskmanager.response;
 
 import com.api.taskmanager.model.User;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Getter
 public class UserDtoResponse {
     private UUID id;
     private String email;

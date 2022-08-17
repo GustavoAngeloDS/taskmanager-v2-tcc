@@ -3,7 +3,8 @@ package com.api.taskmanager.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -35,10 +36,10 @@ public class Board {
     @JoinTable(name = "board_users",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "board_id"))
-    private List<User> memberList;
+    private Set<User> memberList;
 
-    @OneToMany(mappedBy = "board")
-    private List<Stack> stackList;
+    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER)
+    private Set<Stack> stackList = new HashSet<>();
 
     public Board(String name, String description) {
         this.name = name;

@@ -8,9 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "USERS")
@@ -35,14 +33,14 @@ public class User implements UserDetails {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "owner")
-    private List<Board> boards;
+    private Set<Board> boards;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     @Setter
-    private List<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     public User(String email, String username, String nickName, String phoneNumber) {
         this.email = email;
