@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, UUID> {
-    @Query(value = "SELECT b.* " +
+    @Query(value = "SELECT DISTINCT b.* " +
             "FROM boards b " +
             "INNER JOIN board_users bu on b.id = bu.board_id " +
             "INNER JOIN users u ON u.id = bu.user_id or b.owner_id = u.id " +

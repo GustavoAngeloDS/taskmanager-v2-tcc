@@ -8,5 +8,11 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: jardim4565
       POSTGRES_DB: taskmanager
+    volumes:
+      - ./src/main/java/resources:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
+  application:
+    image: taskmanager-img
+    ports:
+      - "5000:5000"
