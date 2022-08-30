@@ -1,5 +1,6 @@
 package com.api.taskmanager.configs.security;
 
+import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,14 +16,11 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
+        http.cors().and().csrf().disable().authorizeHttpRequests().antMatchers(HttpMethod.POST, "/users").permitAll().and()
                 .httpBasic()
-                .and()
-                .authorizeHttpRequests().antMatchers(HttpMethod.POST, "/users").permitAll()
                 .and()
                 .authorizeHttpRequests()
                 .anyRequest().authenticated();
-
         return http.build();
     }
 
