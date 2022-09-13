@@ -31,7 +31,7 @@ public class Stack extends AbstractEntity implements Serializable {
     @JoinColumn(name = "board_id", updatable = false)
     private Board board;
 
-    @OneToMany(mappedBy = "stack")
+    @OneToMany(mappedBy = "stack", cascade = CascadeType.REMOVE)
     private Set<Task> taskList = new HashSet<>();
 
     public Stack(String name) {

@@ -1,15 +1,10 @@
 package com.api.taskmanager.service;
 
 import com.api.taskmanager.exception.TaskManagerCustomException;
-import com.api.taskmanager.model.Board;
-import com.api.taskmanager.model.Stack;
-import com.api.taskmanager.model.Task;
-import com.api.taskmanager.model.User;
-import com.api.taskmanager.repository.BoardRepository;
-import com.api.taskmanager.repository.StackRepository;
-import com.api.taskmanager.repository.TaskRepository;
-import com.api.taskmanager.repository.UserRepository;
+import com.api.taskmanager.model.*;
+import com.api.taskmanager.repository.*;
 import com.api.taskmanager.response.TaskDtoResponse;
+import com.api.taskmanager.response.TaskPrincipalDtoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,14 +22,16 @@ public class TaskService {
     private BoardRepository boardRepository;
     private StackRepository stackRepository;
     private UserRepository userRepository;
+    private InternalTaskRepository internalTaskRepository;
 
     @Autowired
     public TaskService(TaskRepository taskRepository, BoardRepository boardRepository, StackRepository stackRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository, InternalTaskRepository internalTaskRepository) {
         this.taskRepository = taskRepository;
         this.boardRepository = boardRepository;
         this.stackRepository = stackRepository;
         this.userRepository = userRepository;
+        this.internalTaskRepository = internalTaskRepository;
     }
 
     public List<TaskDtoResponse> findAllByBoardId(UUID boardId, Principal principal) {
@@ -124,8 +121,42 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
-    private boolean userIsBoardMember(User user, Board board) {
-        return board.getMemberList().stream().filter((member) -> (member.getId() == user.getId())).count() > 0;
+    public TaskPrincipalDtoResponse includeInternalTask(UUID boardId, UUID taskId, InternalTask internalTask, Principal principal) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+        if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+
+        InternalTask newInternalTask = new InternalTask(internalTask.getChecked(), internalTask.getDescription(), task);
+        task.getInternalTasks().add(newInternalTask);
+
+        return TaskPrincipalDtoResponse.fromEntity(taskRepository.save(task));
+    }
+
+    public TaskPrincipalDtoResponse updateInternalTask(UUID boardId, UUID taskId, UUID internalTaskId,
+                                                       InternalTask newInternalTaskData, Principal principal) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+        if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+        InternalTask internalTask = internalTaskRepository.findById(internalTaskId)
+                .orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+
+        task.getInternalTasks().remove(internalTask);
+
+        internalTask.setChecked(newInternalTaskData.getChecked());
+        internalTask.setDescription(newInternalTaskData.getDescription());
+
+        task.getInternalTasks().add(internalTask);
+        return TaskPrincipalDtoResponse.fromEntity(taskRepository.save(task));
+    }
+
+    public void removeInternalTask(UUID boardId, UUID taskId, UUID internalTaskId, Principal principal) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+        if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+        InternalTask internalTask = internalTaskRepository.findById(internalTaskId)
+                .orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+
+        internalTaskRepository.delete(internalTask);
     }
 
     private boolean hasAccess(Board board, Principal principal) {

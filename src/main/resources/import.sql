@@ -20,3 +20,6 @@ INSERT INTO stacks VALUES ('949c56df-7aac-44ab-b17e-aab7174eb841', CURRENT_TIMES
 INSERT INTO tasks VALUES ('14ce2e17-7ed9-40c0-8481-260231cbb772', CURRENT_TIMESTAMP, 'Descrição teste', 'Título task teste', '581ab551-ef9d-4e33-8063-a50da09053d7');
 
 INSERT INTO task_users VALUES ('14ce2e17-7ed9-40c0-8481-260231cbb772', 'dfcfa272-4885-4801-a849-df07fc717627');
+
+INSERT INTO internal_tasks VALUES ('123e0917-3325-4082-8e04-c1c9c4062844', CURRENT_TIMESTAMP, false, 'Checkar índice teste 1', '14ce2e17-7ed9-40c0-8481-260231cbb772');
+INSERT INTO internal_tasks VALUES ('8c2c964d-23ed-4245-9617-fc01d2b31f1a', CURRENT_TIMESTAMP, true, 'Abastecer teste 2', '14ce2e17-7ed9-40c0-8481-260231cbb772');

@@ -38,7 +38,7 @@ public class Board extends AbstractEntity {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> memberList = new HashSet<>();
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<Stack> stackList = new HashSet<>();
 
     public Board(String name, String description) {

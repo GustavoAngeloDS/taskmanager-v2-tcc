@@ -1,6 +1,7 @@
 package com.api.taskmanager.controller;
 
 import com.api.taskmanager.model.Board;
+import com.api.taskmanager.model.InternalTask;
 import com.api.taskmanager.model.Stack;
 import com.api.taskmanager.model.Task;
 import com.api.taskmanager.service.BoardService;
@@ -48,7 +49,8 @@ public class PrincipalBoardManagementController {
     }
 
     @PutMapping("/{boardId}")
-    public ResponseEntity<?> updateBoard(@PathVariable(name = "boardId") UUID boardId, @RequestBody Board board, Principal principal) {
+    public ResponseEntity<?> updateBoard(@PathVariable(name = "boardId") UUID boardId,
+                                         @RequestBody Board board, Principal principal) {
         return new ResponseEntity<>(boardService.update(boardId, board, principal), HttpStatus.OK);
     }
 
@@ -64,64 +66,109 @@ public class PrincipalBoardManagementController {
     }
 
     @GetMapping("/{boardId}/stacks/{stackId}")
-    public ResponseEntity<?> findStackById(@PathVariable(name = "boardId") UUID boardId, @PathVariable(name = "stackId") UUID stackId, Principal principal) {
+    public ResponseEntity<?> findStackById(@PathVariable(name = "boardId") UUID boardId,
+                                           @PathVariable(name = "stackId") UUID stackId, Principal principal) {
         return new ResponseEntity<>(stackService.findById(boardId, stackId, principal), HttpStatus.OK);
     }
 
     @PostMapping("/{boardId}/stacks")
-    public ResponseEntity<?> createStack(@PathVariable(name = "boardId") UUID boardId, @RequestBody Stack stack, Principal principal) {
+    public ResponseEntity<?> createStack(@PathVariable(name = "boardId") UUID boardId,
+                                         @RequestBody Stack stack, Principal principal) {
         return new ResponseEntity<>(stackService.create(boardId, stack, principal), HttpStatus.CREATED);
     }
 
     @PutMapping("/{boardId}/stacks/{stackId}")
-    public ResponseEntity<?> updateStack(@PathVariable(name = "boardId") UUID boardId, @PathVariable(name = "stackId") UUID stackId, @RequestBody Stack stack, Principal principal) {
+    public ResponseEntity<?> updateStack(@PathVariable(name = "boardId") UUID boardId,
+                                         @PathVariable(name = "stackId") UUID stackId,
+                                         @RequestBody Stack stack, Principal principal) {
         return new ResponseEntity<>(stackService.update(boardId, stackId, stack, principal), HttpStatus.OK);
     }
 
     @DeleteMapping("/{boardId}/stacks/{stackId}")
-    public ResponseEntity<?> removeStack(@PathVariable(name = "boardId") UUID boardId, @PathVariable(name = "stackId") UUID stackId, Principal principal) {
+    public ResponseEntity<?> removeStack(@PathVariable(name = "boardId") UUID boardId,
+                                         @PathVariable(name = "stackId") UUID stackId, Principal principal) {
         stackService.remove(boardId, stackId, principal);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{boardId}/tasks")
-    public ResponseEntity<List<?>> findAllTasksByBoard(@PathVariable(name = "boardId") UUID boardId, Principal principal) {
+    public ResponseEntity<List<?>> findAllTasksByBoard(@PathVariable(name = "boardId") UUID boardId,
+                                                       Principal principal) {
         return new ResponseEntity<>(taskService.findAllByBoardId(boardId, principal), HttpStatus.OK);
     }
 
     @GetMapping("/{boardId}/tasks/{taskId}")
-    public ResponseEntity<?> findTaskById(@PathVariable(name = "boardId") UUID boardId, @PathVariable(name = "taskId") UUID taskId, Principal principal) {
+    public ResponseEntity<?> findTaskById(@PathVariable(name = "boardId") UUID boardId,
+                                          @PathVariable(name = "taskId") UUID taskId, Principal principal) {
         return new ResponseEntity<>(taskService.findById(boardId, taskId, principal), HttpStatus.OK);
     }
 
     @PostMapping("/{boardId}/stacks/{stackId}/tasks")
-    public ResponseEntity<?> createTask(@PathVariable(name = "boardId") UUID boardId, @PathVariable(name = "stackId") UUID stackId, @RequestBody Task task, Principal principal) {
+    public ResponseEntity<?> createTask(@PathVariable(name = "boardId") UUID boardId,
+                                        @PathVariable(name = "stackId") UUID stackId,
+                                        @RequestBody Task task, Principal principal) {
         return new ResponseEntity<>(taskService.create(boardId, stackId, task, principal), HttpStatus.CREATED);
     }
 
     @PostMapping("/{boardId}/tasks/{stackId}/includeMember/{memberId}")
-    public ResponseEntity<?> includeTaskMember(@PathVariable(name = "boardId") UUID boardId, @PathVariable(name = "stackId") UUID stackId, @PathVariable(name = "memberId") UUID memberId, Principal principal) {
-        return new ResponseEntity<>(taskService.includeTaskMember(boardId, stackId, memberId, principal), HttpStatus.CREATED);
+    public ResponseEntity<?> includeTaskMember(@PathVariable(name = "boardId") UUID boardId,
+                                               @PathVariable(name = "stackId") UUID stackId,
+                                               @PathVariable(name = "memberId") UUID memberId, Principal principal) {
+        return new ResponseEntity<>(taskService.includeTaskMember(boardId, stackId, memberId, principal),
+                HttpStatus.CREATED);
     }
 
     @PutMapping("/{boardId}/tasks/{taskId}")
-    public ResponseEntity<?> updateTask(@PathVariable(name = "boardId") UUID boardId, @PathVariable(name = "taskId") UUID taskId, @RequestBody Task task, Principal principal) {
+    public ResponseEntity<?> updateTask(@PathVariable(name = "boardId") UUID boardId,
+                                        @PathVariable(name = "taskId") UUID taskId,
+                                        @RequestBody Task task, Principal principal) {
         return new ResponseEntity<>(taskService.update(boardId, taskId, task, principal), HttpStatus.OK);
     }
 
+    @PostMapping("/{boardId}/tasks/{taskId}/includeInternalTask")
+    public ResponseEntity<?> includeInternalTask(@PathVariable(name = "boardId") UUID boardId,
+                                                 @PathVariable(name = "taskId") UUID taskId,
+                                                 @RequestBody InternalTask internalTask, Principal principal) {
+        return new ResponseEntity<>(taskService.includeInternalTask(boardId, taskId, internalTask, principal),
+                HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{boardId}/tasks/{taskId}/{internalTaskId}")
+    public ResponseEntity<?> updateInternalTask(@PathVariable(name = "boardId") UUID boardId,
+                                                 @PathVariable(name = "taskId") UUID taskId,
+                                                 @PathVariable(name = "internalTaskId") UUID internalTaskId,
+                                                 @RequestBody InternalTask internalTask, Principal principal) {
+        return new ResponseEntity<>(taskService.updateInternalTask(boardId, taskId, internalTaskId, internalTask
+                , principal), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{boardId}/tasks/{taskId}/{internalTaskId}")
+    public ResponseEntity<?> removeInternalTask(@PathVariable(name = "boardId") UUID boardId,
+                                                @PathVariable(name = "taskId") UUID taskId,
+                                                @PathVariable(name = "internalTaskId") UUID internalTaskId,
+                                                Principal principal) {
+        taskService.removeInternalTask(boardId, taskId, internalTaskId, principal);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PutMapping("/{boardId}/tasks/{taskId}/change-stack/{newStackId}")
-    public ResponseEntity<?> updateTaskStack(@PathVariable(name = "boardId") UUID boardId, @PathVariable(name = "taskId") UUID taskId, @PathVariable(name = "newStackId") UUID newStackId, Principal principal) {
+    public ResponseEntity<?> updateTaskStack(@PathVariable(name = "boardId") UUID boardId,
+                                             @PathVariable(name = "taskId") UUID taskId,
+                                             @PathVariable(name = "newStackId") UUID newStackId, Principal principal) {
         return new ResponseEntity<>(taskService.updateTaskStack(boardId, taskId, newStackId, principal), HttpStatus.OK);
     }
 
     @DeleteMapping("/{boardId}/tasks/{taskId}")
-    public ResponseEntity<?> removeTask(@PathVariable(name = "boardId") UUID boardId, @PathVariable(name = "taskId") UUID taskId, Principal principal) {
+    public ResponseEntity<?> removeTask(@PathVariable(name = "boardId") UUID boardId,
+                                        @PathVariable(name = "taskId") UUID taskId, Principal principal) {
         taskService.remove(boardId, taskId, principal);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{boardId}/tasks/{stackId}/removeMember/{memberId}")
-    public ResponseEntity<?> removeTaskMember(@PathVariable(name = "boardId") UUID boardId, @PathVariable(name = "stackId") UUID stackId, @PathVariable(name = "memberId") UUID memberId, Principal principal) {
+    public ResponseEntity<?> removeTaskMember(@PathVariable(name = "boardId") UUID boardId,
+                                              @PathVariable(name = "stackId") UUID stackId,
+                                              @PathVariable(name = "memberId") UUID memberId, Principal principal) {
         taskService.removeTaskMember(boardId, stackId, memberId, principal);
         return new ResponseEntity<>(HttpStatus.OK);
     }
