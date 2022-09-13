@@ -38,7 +38,7 @@ public class Task extends AbstractEntity {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> memberList = new HashSet<>();
 
-    @OneToMany(mappedBy = "task", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "task", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<InternalTask> internalTasks = new HashSet<>();
 
     public Task(String title, String description) {
