@@ -133,7 +133,7 @@ public class PrincipalBoardManagementController {
                 HttpStatus.CREATED);
     }
 
-    @PutMapping("/{boardId}/tasks/{taskId}/{internalTaskId}")
+    @PutMapping("/{boardId}/tasks/{taskId}/internalTask/{internalTaskId}")
     public ResponseEntity<?> updateInternalTask(@PathVariable(name = "boardId") UUID boardId,
                                                  @PathVariable(name = "taskId") UUID taskId,
                                                  @PathVariable(name = "internalTaskId") UUID internalTaskId,
@@ -142,7 +142,7 @@ public class PrincipalBoardManagementController {
                 , principal), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{boardId}/tasks/{taskId}/{internalTaskId}")
+    @DeleteMapping("/{boardId}/tasks/{taskId}/internalTask/{internalTaskId}")
     public ResponseEntity<?> removeInternalTask(@PathVariable(name = "boardId") UUID boardId,
                                                 @PathVariable(name = "taskId") UUID taskId,
                                                 @PathVariable(name = "internalTaskId") UUID internalTaskId,
