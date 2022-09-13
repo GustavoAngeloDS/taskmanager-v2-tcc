@@ -18,9 +18,11 @@ public class TaskDtoResponse {
     private String title;
     private String description;
     private Set<UserDtoResponse> memberList;
+    private Set<InternalTaskDtoResponse> internalTasks;
 
     public static TaskDtoResponse fromEntity(Task task) {
         return new TaskDtoResponse(task.getId(), task.getTitle(), task.getDescription(),
-                task.getMemberList().stream().map(UserDtoResponse::fromEntity).collect(Collectors.toSet()));
+                task.getMemberList().stream().map(UserDtoResponse::fromEntity).collect(Collectors.toSet()),
+                task.getInternalTasks().stream().map(InternalTaskDtoResponse::fromEntity).collect(Collectors.toSet()));
     }
 }

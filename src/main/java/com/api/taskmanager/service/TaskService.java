@@ -4,7 +4,6 @@ import com.api.taskmanager.exception.TaskManagerCustomException;
 import com.api.taskmanager.model.*;
 import com.api.taskmanager.repository.*;
 import com.api.taskmanager.response.TaskDtoResponse;
-import com.api.taskmanager.response.TaskPrincipalDtoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -121,7 +120,7 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
-    public TaskPrincipalDtoResponse includeInternalTask(UUID boardId, UUID taskId, InternalTask internalTask, Principal principal) {
+    public TaskDtoResponse includeInternalTask(UUID boardId, UUID taskId, InternalTask internalTask, Principal principal) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
         if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
@@ -129,10 +128,10 @@ public class TaskService {
         InternalTask newInternalTask = new InternalTask(internalTask.getChecked(), internalTask.getDescription(), task);
         task.getInternalTasks().add(newInternalTask);
 
-        return TaskPrincipalDtoResponse.fromEntity(taskRepository.save(task));
+        return TaskDtoResponse.fromEntity(taskRepository.save(task));
     }
 
-    public TaskPrincipalDtoResponse updateInternalTask(UUID boardId, UUID taskId, UUID internalTaskId,
+    public TaskDtoResponse updateInternalTask(UUID boardId, UUID taskId, UUID internalTaskId,
                                                        InternalTask newInternalTaskData, Principal principal) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
         if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
@@ -146,7 +145,7 @@ public class TaskService {
         internalTask.setDescription(newInternalTaskData.getDescription());
 
         task.getInternalTasks().add(internalTask);
-        return TaskPrincipalDtoResponse.fromEntity(taskRepository.save(task));
+        return TaskDtoResponse.fromEntity(taskRepository.save(task));
     }
 
     public void removeInternalTask(UUID boardId, UUID taskId, UUID internalTaskId, Principal principal) {
