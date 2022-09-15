@@ -1,9 +1,6 @@
 package com.api.taskmanager.controller;
 
-import com.api.taskmanager.model.Board;
-import com.api.taskmanager.model.InternalTask;
-import com.api.taskmanager.model.Stack;
-import com.api.taskmanager.model.Task;
+import com.api.taskmanager.model.*;
 import com.api.taskmanager.service.BoardService;
 import com.api.taskmanager.service.StackService;
 import com.api.taskmanager.service.TaskService;
@@ -110,11 +107,11 @@ public class PrincipalBoardManagementController {
         return new ResponseEntity<>(taskService.create(boardId, stackId, task, principal), HttpStatus.CREATED);
     }
 
-    @PostMapping("/{boardId}/tasks/{stackId}/includeMember/{memberId}")
+    @PostMapping("/{boardId}/tasks/{taskId}/updateMemberList")
     public ResponseEntity<?> includeTaskMember(@PathVariable(name = "boardId") UUID boardId,
-                                               @PathVariable(name = "stackId") UUID stackId,
-                                               @PathVariable(name = "memberId") UUID memberId, Principal principal) {
-        return new ResponseEntity<>(taskService.includeTaskMember(boardId, stackId, memberId, principal),
+                                               @PathVariable(name = "taskId") UUID taskId,
+                                               @RequestBody List<User> taskMembers, Principal principal) {
+        return new ResponseEntity<>(taskService.updateTaskMembers(boardId, taskId, taskMembers, principal),
                 HttpStatus.CREATED);
     }
 

@@ -87,14 +87,17 @@ public class TaskService {
         return TaskDtoResponse.fromEntity(updatedTask);
     }
 
-    public TaskDtoResponse includeTaskMember(UUID boardId, UUID taskId, UUID memberId, Principal principal) {
+    public TaskDtoResponse updateTaskMembers(UUID boardId, UUID taskId, List<User> taskMembers, Principal principal) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
         if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
-        User newMember = userRepository.findById(memberId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
 
-        if(!task.getMemberList().contains(newMember)) task.getMemberList().add(newMember);
-        else throw new TaskManagerCustomException(USER_ALREADY_IS_MEMBER);
+        task.getMemberList().removeIf((member) -> !taskMembers.contains(member));
+
+        taskMembers.forEach(member -> {
+            User newMember = userRepository.findById(member.getId()).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+            task.getMemberList().add(newMember);
+        });
 
         Task updatedTask = taskRepository.save(task);
         return TaskDtoResponse.fromEntity(updatedTask);
