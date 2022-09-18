@@ -2,6 +2,7 @@ package com.api.taskmanager.service;
 
 import com.api.taskmanager.exception.TaskManagerCustomException;
 import com.api.taskmanager.model.Board;
+import com.api.taskmanager.model.User;
 import com.api.taskmanager.repository.BoardRepository;
 import com.api.taskmanager.response.BoardDtoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,11 @@ public class BoardService {
     }
 
     public BoardDtoResponse create(Board board, Principal principal) {
-        board.setOwner(userService.findByUsername(principal.getName()));
+        User owner = userService.findByUsername(principal.getName());
+
+        board.setOwner(owner);
+        board.getMemberList().add(owner);
+
         Board createdBoard = repository.save(board);
         return BoardDtoResponse.fromEntity(createdBoard);
     }
