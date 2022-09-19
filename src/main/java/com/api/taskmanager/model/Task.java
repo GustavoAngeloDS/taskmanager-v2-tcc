@@ -41,6 +41,9 @@ public class Task extends AbstractEntity {
     @OneToMany(mappedBy = "task", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<InternalTask> internalTasks = new HashSet<>();
 
+    @OneToOne(mappedBy = "task", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private DueDate dueDate;
+
     public Task(String title, String description) {
         this.title = title;
         this.description = description;
