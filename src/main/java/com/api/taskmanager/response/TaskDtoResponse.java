@@ -1,7 +1,6 @@
 package com.api.taskmanager.response;
 
 import com.api.taskmanager.model.Task;
-import com.api.taskmanager.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,10 +18,12 @@ public class TaskDtoResponse {
     private String description;
     private Set<UserDtoResponse> memberList;
     private Set<InternalTaskDtoResponse> internalTasks;
+    private DueDateDtoResponse dueDate;
 
     public static TaskDtoResponse fromEntity(Task task) {
         return new TaskDtoResponse(task.getId(), task.getTitle(), task.getDescription(),
                 task.getMemberList().stream().map(UserDtoResponse::fromEntity).collect(Collectors.toSet()),
-                task.getInternalTasks().stream().map(InternalTaskDtoResponse::fromEntity).collect(Collectors.toSet()));
+                task.getInternalTasks().stream().map(InternalTaskDtoResponse::fromEntity).collect(Collectors.toSet()),
+                DueDateDtoResponse.fromEntity(task.getDueDate()));
     }
 }

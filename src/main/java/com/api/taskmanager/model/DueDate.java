@@ -16,9 +16,8 @@ public class DueDate extends AbstractEntity {
 
     private Date date;
 
-    private Boolean isActive;
+    private Boolean active;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "taskId", updatable = false, nullable = false)
+    @OneToOne(mappedBy = "dueDate", fetch = FetchType.EAGER)
     private Task task;
 }

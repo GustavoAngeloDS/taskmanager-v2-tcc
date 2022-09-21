@@ -58,6 +58,9 @@ public class TaskService {
         Stack stack = stackRepository.findById(stackId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
 
         task.setStack(stack);
+        DueDate dueDate = new DueDate();
+        dueDate.setActive(false);
+        task.setDueDate(dueDate);
 
         Task createdTask = taskRepository.save(task);
         return TaskDtoResponse.fromEntity(createdTask);
@@ -161,8 +164,20 @@ public class TaskService {
         internalTaskRepository.delete(internalTask);
     }
 
+    public TaskDtoResponse updateTaskDueDate(UUID boardId, UUID taskId, DueDate dueDate, Principal principal) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+        if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+
+        task.getDueDate().setDate(dueDate.getDate());
+        task.getDueDate().setActive(dueDate.getActive());
+
+        return TaskDtoResponse.fromEntity(taskRepository.save(task));
+    }
+
     private boolean hasAccess(Board board, Principal principal) {
         return (board.getMemberList().stream().filter((member) -> (member.getUsername().equals(principal.getName())))
                 .count() > 0 || board.getOwner().getUsername().equals(principal.getName()));
     }
+
 }

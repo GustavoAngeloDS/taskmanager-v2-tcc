@@ -122,6 +122,14 @@ public class PrincipalBoardManagementController {
         return new ResponseEntity<>(taskService.update(boardId, taskId, task, principal), HttpStatus.OK);
     }
 
+    @PutMapping("/{boardId}/tasks/{taskId}/duedate")
+    public ResponseEntity<?> updateTaskDueDate(@PathVariable(name = "boardId") UUID boardId,
+                                               @PathVariable(name = "taskId") UUID taskId,
+                                               @RequestBody DueDate dueDate, Principal principal) {
+        return new ResponseEntity<>(taskService.updateTaskDueDate(boardId, taskId, dueDate, principal),
+                HttpStatus.ACCEPTED);
+    }
+
     @PostMapping("/{boardId}/tasks/{taskId}/includeInternalTask")
     public ResponseEntity<?> includeInternalTask(@PathVariable(name = "boardId") UUID boardId,
                                                  @PathVariable(name = "taskId") UUID taskId,
