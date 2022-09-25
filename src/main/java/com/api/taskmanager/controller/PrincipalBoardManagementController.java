@@ -156,6 +156,15 @@ public class PrincipalBoardManagementController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PutMapping("/{boardId}/tasks/{taskId}/notificationConfiguration")
+    public ResponseEntity<?> updateTaskNotificationConfiguration(@PathVariable(name = "boardId") UUID boardId,
+                                                @PathVariable(name = "taskId") UUID taskId,
+                                                @RequestBody NotificationConfiguration notificationConfiguration,
+                                                Principal principal) {
+        return new ResponseEntity<>(taskService.updateTaskNotificationConfiguration(boardId, taskId,
+                notificationConfiguration, principal), HttpStatus.OK);
+    }
+
     @PutMapping("/{boardId}/tasks/{taskId}/change-stack/{newStackId}")
     public ResponseEntity<?> updateTaskStack(@PathVariable(name = "boardId") UUID boardId,
                                              @PathVariable(name = "taskId") UUID taskId,

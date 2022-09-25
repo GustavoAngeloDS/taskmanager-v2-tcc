@@ -58,6 +58,9 @@ public class TaskService {
         Stack stack = stackRepository.findById(stackId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
 
         task.setStack(stack);
+
+        task.setNotificationConfiguration(new NotificationConfiguration());
+
         DueDate dueDate = new DueDate();
         dueDate.setActive(false);
         task.setDueDate(dueDate);
@@ -171,6 +174,19 @@ public class TaskService {
 
         task.getDueDate().setDate(dueDate.getDate());
         task.getDueDate().setActive(dueDate.getActive());
+
+        return TaskDtoResponse.fromEntity(taskRepository.save(task));
+    }
+
+    public TaskDtoResponse updateTaskNotificationConfiguration(UUID boardId, UUID taskId, NotificationConfiguration
+            notificationConfiguration, Principal principal) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+        if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+
+        task.getNotificationConfiguration().setNotificationType(notificationConfiguration.getNotificationType());
+        task.getNotificationConfiguration().setMessage(notificationConfiguration.getMessage());
+        task.getNotificationConfiguration().setTitle(notificationConfiguration.getTitle());
 
         return TaskDtoResponse.fromEntity(taskRepository.save(task));
     }

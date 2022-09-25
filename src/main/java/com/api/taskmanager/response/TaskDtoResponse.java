@@ -19,11 +19,13 @@ public class TaskDtoResponse {
     private Set<UserDtoResponse> memberList;
     private Set<InternalTaskDtoResponse> internalTasks;
     private DueDateDtoResponse dueDate;
+    private NotificationConfigurationDtoResponse notificationConfiguration;
 
     public static TaskDtoResponse fromEntity(Task task) {
         return new TaskDtoResponse(task.getId(), task.getTitle(), task.getDescription(),
                 task.getMemberList().stream().map(UserDtoResponse::fromEntity).collect(Collectors.toSet()),
                 task.getInternalTasks().stream().map(InternalTaskDtoResponse::fromEntity).collect(Collectors.toSet()),
-                DueDateDtoResponse.fromEntity(task.getDueDate()));
+                DueDateDtoResponse.fromEntity(task.getDueDate()),
+                NotificationConfigurationDtoResponse.fromEntity(task.getNotificationConfiguration()));
     }
 }

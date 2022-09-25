@@ -46,6 +46,11 @@ public class Task extends AbstractEntity {
     @JoinColumn(name = "dueDateId", nullable = true)
     private DueDate dueDate;
 
+    @Setter
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "notificationConfigurationId", nullable = true)
+    private NotificationConfiguration notificationConfiguration;
+
     public Task(String title, String description) {
         this.title = title;
         this.description = description;

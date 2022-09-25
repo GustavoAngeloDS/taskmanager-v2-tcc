@@ -20,8 +20,9 @@ INSERT INTO stacks VALUES ('08c4a8df-a202-4f35-bf94-74055c06ac4b', CURRENT_TIMES
 INSERT INTO stacks VALUES ('949c56df-7aac-44ab-b17e-aab7174eb841', CURRENT_TIMESTAMP, 'FINISHED', '57a4489e-4b6b-4f4e-992d-fa3d0e50c6dc');
 
 INSERT INTO due_date VALUES ('419c56df-7aac-44ab-b17e-aab71712b841', CURRENT_TIMESTAMP, true, CURRENT_TIMESTAMP);
+INSERT INTO notification_configuration (id, message, notification_type, title) VALUES ('401dc56d-7aac-44ab-b17e-aab71712b841', 'A atividade ID [14ce2e17-7ed9-40c0-8481-260231cbb772] vencerá em breve', 'EMAIL', 'Lembrete de vencimento de atividade');
 
-INSERT INTO tasks VALUES ('14ce2e17-7ed9-40c0-8481-260231cbb772', CURRENT_TIMESTAMP, 'Descrição teste', 'Título task teste', '419c56df-7aac-44ab-b17e-aab71712b841', '581ab551-ef9d-4e33-8063-a50da09053d7');
+INSERT INTO tasks VALUES ('14ce2e17-7ed9-40c0-8481-260231cbb772', CURRENT_TIMESTAMP, 'Descrição teste', 'Título task teste', '419c56df-7aac-44ab-b17e-aab71712b841','401dc56d-7aac-44ab-b17e-aab71712b841', '581ab551-ef9d-4e33-8063-a50da09053d7');
 
 INSERT INTO task_users VALUES ('14ce2e17-7ed9-40c0-8481-260231cbb772', 'dfcfa272-4885-4801-a849-df07fc717627');
 
