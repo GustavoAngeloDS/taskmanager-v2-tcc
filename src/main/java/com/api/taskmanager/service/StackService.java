@@ -53,6 +53,7 @@ public class StackService {
         if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
 
         stack.setBoard(board);
+        stack.setPosition(stackRepository.findNextAvailablePositionByBoardId(boardId));
         Stack createdStack = stackRepository.save(stack);
 
         return StackDtoResponse.fromEntity(createdStack);

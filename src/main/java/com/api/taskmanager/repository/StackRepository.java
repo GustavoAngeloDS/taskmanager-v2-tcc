@@ -11,4 +11,8 @@ import java.util.UUID;
 @Repository
 public interface StackRepository extends JpaRepository<Stack, UUID> {
     List<Stack> findAllByBoardId(UUID boardId);
+
+    @Query(value = "SELECT COALESCE(MAX(s.position), 0)+1 FROM stacks s WHERE s.board_id = :boardId",
+            nativeQuery = true)
+    Integer findNextAvailablePositionByBoardId(UUID boardId);
 }
