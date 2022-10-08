@@ -18,10 +18,11 @@ public class StackDtoResponse {
     private UUID id;
     private String name;
     private Date createdOn;
+    private Integer position;
     private Set<TaskDtoResponse> taskList;
 
     public static StackDtoResponse fromEntity(Stack stack) {
-        return new StackDtoResponse(stack.getId(), stack.getName(), stack.getCreatedOn(), stack.getTaskList()
-                .stream().map(TaskDtoResponse::fromEntity).collect(Collectors.toSet()));
+        return new StackDtoResponse(stack.getId(), stack.getName(), stack.getCreatedOn(), stack.getPosition(),
+                stack.getTaskList().stream().map(TaskDtoResponse::fromEntity).collect(Collectors.toSet()));
     }
 }

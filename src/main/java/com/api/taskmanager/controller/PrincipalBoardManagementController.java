@@ -172,6 +172,15 @@ public class PrincipalBoardManagementController {
         return new ResponseEntity<>(taskService.updateTaskStack(boardId, taskId, newStackId, principal), HttpStatus.OK);
     }
 
+    @PutMapping("/{boardId}/stacks/{stackId}/update-position/{newPosition}")
+    public ResponseEntity<List<?>> updateStackPosition(@PathVariable(name = "boardId") UUID boardId,
+                                                       @PathVariable(name = "stackId") UUID stackId,
+                                                       @PathVariable(name = "newPosition") Integer newPosition,
+                                                       Principal principal) {
+        return new ResponseEntity<>(stackService.updateStackPosition(boardId, stackId,
+                newPosition, principal), HttpStatus.OK);
+    }
+
     @DeleteMapping("/{boardId}/tasks/{taskId}")
     public ResponseEntity<?> removeTask(@PathVariable(name = "boardId") UUID boardId,
                                         @PathVariable(name = "taskId") UUID taskId, Principal principal) {

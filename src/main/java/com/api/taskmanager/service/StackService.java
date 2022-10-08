@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.*;
+import java.util.stream.Collectors;
 
-import static com.api.taskmanager.exception.TaskManagerCustomException.FORBIDDEN;
-import static com.api.taskmanager.exception.TaskManagerCustomException.ID_NOT_FOUND;
+import static com.api.taskmanager.exception.TaskManagerCustomException.*;
 
 @Service
 public class StackService {
@@ -36,7 +36,7 @@ public class StackService {
             stackDtoResponseList.add(StackDtoResponse.fromEntity(stack));
         });
 
-        Collections.sort(stackDtoResponseList, Comparator.comparing(StackDtoResponse::getCreatedOn));
+        Collections.sort(stackDtoResponseList, Comparator.comparing(StackDtoResponse::getPosition));
         return stackDtoResponseList;
     }
 
@@ -56,6 +56,33 @@ public class StackService {
         Stack createdStack = stackRepository.save(stack);
 
         return StackDtoResponse.fromEntity(createdStack);
+    }
+
+    public List<StackDtoResponse> updateStackPosition(UUID boardId, UUID stackToBeUpdatedId,
+                                                      Integer newPosition, Principal principal) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+        if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
+        Stack originalStack = stackRepository.findById(stackToBeUpdatedId)
+                .orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+
+        if(newPosition != originalStack.getPosition()) {
+            stackRepository.findAllByBoardId(boardId).stream()
+                    .filter(filteredStack -> filteredStack.getPosition() == newPosition).findFirst().ifPresentOrElse(
+                            stack -> {
+                                stack.setPosition(originalStack.getPosition());
+                                stackRepository.save(stack);
+                            }, () -> new TaskManagerCustomException(POSITION_IS_NOT_AVAILABLE)
+                    );
+
+            originalStack.setPosition(newPosition);
+            stackRepository.save(originalStack);
+        }
+
+        List<StackDtoResponse> stackDtoResponseList = stackRepository.findAllByBoardId(boardId).stream()
+                .map(StackDtoResponse::fromEntity).collect(Collectors.toList());
+
+        Collections.sort(stackDtoResponseList, Comparator.comparing(StackDtoResponse::getPosition));
+        return stackDtoResponseList;
     }
 
     public StackDtoResponse update(UUID boardId, UUID stackId, Stack newStackData, Principal principal) {
