@@ -2,15 +2,15 @@ package com.api.taskmanager.service;
 
 import com.api.taskmanager.exception.TaskManagerCustomException;
 import com.api.taskmanager.model.*;
+import com.api.taskmanager.model.Stack;
 import com.api.taskmanager.repository.*;
 import com.api.taskmanager.response.TaskDtoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.api.taskmanager.exception.TaskManagerCustomException.*;
 
@@ -37,10 +37,9 @@ public class TaskService {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
         if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
 
-        List<TaskDtoResponse> taskDtoResponseList = new ArrayList<>();
-        taskRepository.findAllByBoardId(boardId).forEach(task -> {
-            taskDtoResponseList.add(TaskDtoResponse.fromEntity(task));
-        });
+        List<TaskDtoResponse> taskDtoResponseList = taskRepository.findAllByBoardId(boardId).stream()
+                .map(TaskDtoResponse::fromEntity).collect(Collectors.toList());
+
         return taskDtoResponseList;
     }
 
@@ -58,6 +57,7 @@ public class TaskService {
         Stack stack = stackRepository.findById(stackId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
 
         task.setStack(stack);
+        task.setPosition(taskRepository.findNextAvailablePositionByBoardAndStack(boardId, stackId));
 
         task.setNotificationConfiguration(new NotificationConfiguration());
 
@@ -189,6 +189,72 @@ public class TaskService {
         task.getNotificationConfiguration().setTitle(notificationConfiguration.getTitle());
 
         return TaskDtoResponse.fromEntity(taskRepository.save(task));
+    }
+
+    public List<TaskDtoResponse> updateTaskPosition(UUID boardId, UUID newStackId, UUID taskId, Integer newPosition,
+                                                    Principal principal) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+        if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+        Stack stack = stackRepository.findById(newStackId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+
+        if(newPosition != task.getPosition() || !newStackId.equals(task.getStack().getId())) {
+            if(newStackId.equals(task.getStack().getId())) {
+                if(newPosition > task.getPosition()) {
+                    taskRepository.findAllByBoardIdAndStackId(boardId, stack.getId()).stream()
+                            .filter(filteredTask -> filteredTask.getPosition() > task.getPosition()
+                                    && filteredTask.getPosition() != task.getPosition()
+                                    && filteredTask.getPosition() <= newPosition)
+                            .forEach(taskToUpdate -> {
+                                taskToUpdate.setPosition(taskToUpdate.getPosition() - 1);
+                                taskRepository.save(taskToUpdate);
+                            });
+                } else {
+                    taskRepository.findAllByBoardIdAndStackId(boardId, stack.getId()).stream()
+                            .filter(filteredTask -> filteredTask.getPosition() < task.getPosition()
+                                    && filteredTask.getPosition() != task.getPosition()
+                                    && filteredTask.getPosition() >= newPosition)
+                            .forEach(taskToUpdate -> {
+                                taskToUpdate.setPosition(taskToUpdate.getPosition() + 1);
+                                taskRepository.save(taskToUpdate);
+                            });
+                }
+                task.setPosition(newPosition);
+                taskRepository.save(task);
+            } else {
+                taskRepository.findAllByBoardIdAndStackId(boardId, task.getStack().getId()).stream()
+                        .filter(filteredTask -> filteredTask.getPosition() > task.getPosition())
+                        .forEach(taskToUpdate -> {
+                            taskToUpdate.setPosition(taskToUpdate.getPosition() - 1);
+                        });
+                taskRepository.findAllByBoardIdAndStackId(boardId, newStackId).stream()
+                        .filter(filteredStack -> filteredStack.getPosition() >= newPosition)
+                        .forEach(taskToUpdate -> {
+                            taskToUpdate.setPosition(taskToUpdate.getPosition() + 1);
+                            taskRepository.save(taskToUpdate);
+                        });
+                task.setStack(stack);
+                task.setPosition(newPosition);
+                taskRepository.save(task);
+            }
+        }
+
+//        Na stack antiga:
+//            Todos os itens que tiverem a posição maior da atual: -1
+//        Na nova stack:
+//            Todos os itens que tiverem a posição maior ou igual a nova posição: + 1
+
+
+//        Se a nova posicao for maior que a atual
+//                Todos os itens que tiverem a posição maior que a atual E que seja diferente da posição atual E inferiores OU iguais a nova posição: -1
+//        Se a nova posição for inferior a atual
+//                Todos os itens que tiverem a posição menor que a atual E que seja diferente da posição atual E superiores OU iguais a nova posição: +1
+
+        List<TaskDtoResponse> taskDtoResponseList = taskRepository.findAllByBoardId(boardId).stream()
+                .map(TaskDtoResponse::fromEntity).collect(Collectors.toList());
+
+        Collections.sort(taskDtoResponseList, Comparator.comparing(TaskDtoResponse::getPosition));
+        return taskDtoResponseList;
     }
 
     private boolean hasAccess(Board board, Principal principal) {

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.*;
@@ -27,8 +26,11 @@ public class Task extends AbstractEntity {
     private String description;
 
     @Setter
+    private Integer position;
+
+    @Setter
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "stack_id", nullable = false, updatable = true, insertable = true)
+    @JoinColumn(name = "stack_id", nullable = false)
     private Stack stack;
 
     @Setter
@@ -43,16 +45,12 @@ public class Task extends AbstractEntity {
 
     @Setter
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "dueDateId", nullable = true)
+    @JoinColumn(name = "dueDateId")
     private DueDate dueDate;
 
     @Setter
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "notificationConfigurationId", nullable = true)
+    @JoinColumn(name = "notificationConfigurationId")
     private NotificationConfiguration notificationConfiguration;
 
-    public Task(String title, String description) {
-        this.title = title;
-        this.description = description;
-    }
 }
