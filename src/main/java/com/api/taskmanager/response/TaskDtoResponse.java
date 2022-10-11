@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -18,15 +17,16 @@ public class TaskDtoResponse {
     private String description;
     private Integer position;
     private Set<UserDtoResponse> memberList;
-    private Set<InternalTaskDtoResponse> internalTasks;
+    private List<InternalTaskDtoResponse> internalTasks;
     private DueDateDtoResponse dueDate;
     private NotificationConfigurationDtoResponse notificationConfiguration;
 
     public static TaskDtoResponse fromEntity(Task task) {
         return new TaskDtoResponse(task.getId(), task.getTitle(), task.getDescription(), task.getPosition(),
                 task.getMemberList().stream().map(UserDtoResponse::fromEntity).collect(Collectors.toSet()),
-                task.getInternalTasks().stream().map(InternalTaskDtoResponse::fromEntity).collect(Collectors.toSet()),
-                DueDateDtoResponse.fromEntity(task.getDueDate()),
+                task.getInternalTasks().stream().map(InternalTaskDtoResponse::fromEntity)
+                        .sorted(Comparator.comparing(InternalTaskDtoResponse::getPosition))
+                        .collect(Collectors.toList()), DueDateDtoResponse.fromEntity(task.getDueDate()),
                 NotificationConfigurationDtoResponse.fromEntity(task.getNotificationConfiguration()));
     }
 }

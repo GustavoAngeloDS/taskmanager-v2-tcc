@@ -15,9 +15,10 @@ public class InternalTaskDtoResponse {
     private UUID id;
     private Boolean checked;
     private String description;
+    private Integer position;
 
     public static InternalTaskDtoResponse fromEntity(InternalTask internalTask) {
         return new InternalTaskDtoResponse(internalTask.getId(), internalTask.getChecked(),
-                internalTask.getDescription());
+                internalTask.getDescription(), internalTask.getPosition());
     }
 }

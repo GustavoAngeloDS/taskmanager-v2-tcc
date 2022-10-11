@@ -134,7 +134,9 @@ public class TaskService {
         if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
 
-        InternalTask newInternalTask = new InternalTask(internalTask.getChecked(), internalTask.getDescription(), task);
+        InternalTask newInternalTask = new InternalTask(internalTask.getChecked(), internalTask.getDescription(),
+                internalTaskRepository.findNextAvailablePositionByTask(taskId), task);
+        internalTaskRepository.save(newInternalTask);
         task.getInternalTasks().add(newInternalTask);
 
         return TaskDtoResponse.fromEntity(taskRepository.save(task));
@@ -148,12 +150,35 @@ public class TaskService {
         InternalTask internalTask = internalTaskRepository.findById(internalTaskId)
                 .orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
 
-        task.getInternalTasks().remove(internalTask);
-
         internalTask.setChecked(newInternalTaskData.getChecked());
         internalTask.setDescription(newInternalTaskData.getDescription());
-
         task.getInternalTasks().add(internalTask);
+
+        return TaskDtoResponse.fromEntity(taskRepository.save(task));
+    }
+
+    public TaskDtoResponse updateInternalTaskPosition(UUID boardId, UUID taskId, UUID internalTaskId,
+                                                      Integer newPosition, Principal principal) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+        if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+        InternalTask internalTask = internalTaskRepository.findById(internalTaskId)
+                .orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+
+        if(newPosition >= 0 && newPosition < task.getInternalTasks().size()) {
+            InternalTask internalTaskAtNewPosition = task.getInternalTasks().stream()
+                    .filter((internalTask1 -> internalTask1.getPosition() == newPosition))
+                    .findFirst().get();
+
+            if(!Objects.isNull(internalTaskAtNewPosition)) {
+                internalTaskAtNewPosition.setPosition(internalTask.getPosition());
+                task.getInternalTasks().add(internalTaskAtNewPosition);
+            }
+
+            internalTask.setPosition(newPosition);
+            task.getInternalTasks().add(internalTask);
+        }
+
         return TaskDtoResponse.fromEntity(taskRepository.save(task));
     }
 
@@ -164,7 +189,16 @@ public class TaskService {
         InternalTask internalTask = internalTaskRepository.findById(internalTaskId)
                 .orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
 
+        task.getInternalTasks().stream()
+                .filter(filteredInternalTask -> filteredInternalTask.getPosition() > internalTask.getPosition())
+                .forEach(internalTaskToUpdate -> {
+                    internalTaskToUpdate.setPosition(internalTaskToUpdate.getPosition() - 1);
+                    internalTaskRepository.save(internalTaskToUpdate);
+                });
+
+        task.getInternalTasks().remove(internalTask);
         internalTaskRepository.delete(internalTask);
+        taskRepository.save(task);
     }
 
     public TaskDtoResponse updateTaskDueDate(UUID boardId, UUID taskId, DueDate dueDate, Principal principal) {

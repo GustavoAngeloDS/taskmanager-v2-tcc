@@ -130,7 +130,7 @@ public class PrincipalBoardManagementController {
                 HttpStatus.ACCEPTED);
     }
 
-    @PostMapping("/{boardId}/tasks/{taskId}/includeInternalTask")
+    @PostMapping("/{boardId}/tasks/{taskId}/internalTasks")
     public ResponseEntity<?> includeInternalTask(@PathVariable(name = "boardId") UUID boardId,
                                                  @PathVariable(name = "taskId") UUID taskId,
                                                  @RequestBody InternalTask internalTask, Principal principal) {
@@ -138,7 +138,7 @@ public class PrincipalBoardManagementController {
                 HttpStatus.CREATED);
     }
 
-    @PutMapping("/{boardId}/tasks/{taskId}/internalTask/{internalTaskId}")
+    @PutMapping("/{boardId}/tasks/{taskId}/internalTasks/{internalTaskId}")
     public ResponseEntity<?> updateInternalTask(@PathVariable(name = "boardId") UUID boardId,
                                                  @PathVariable(name = "taskId") UUID taskId,
                                                  @PathVariable(name = "internalTaskId") UUID internalTaskId,
@@ -147,13 +147,23 @@ public class PrincipalBoardManagementController {
                 , principal), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{boardId}/tasks/{taskId}/internalTask/{internalTaskId}")
+    @DeleteMapping("/{boardId}/tasks/{taskId}/internalTasks/{internalTaskId}")
     public ResponseEntity<?> removeInternalTask(@PathVariable(name = "boardId") UUID boardId,
                                                 @PathVariable(name = "taskId") UUID taskId,
                                                 @PathVariable(name = "internalTaskId") UUID internalTaskId,
                                                 Principal principal) {
         taskService.removeInternalTask(boardId, taskId, internalTaskId, principal);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/{boardId}/tasks/{taskId}/internalTasks/{internalTaskId}/update-position/{newPosition}")
+    public ResponseEntity<?> updateInternalTaskPosition(@PathVariable(name = "boardId") UUID boardId,
+                                                @PathVariable(name = "taskId") UUID taskId,
+                                                @PathVariable(name = "internalTaskId") UUID internalTaskId,
+                                                @PathVariable(name = "newPosition") Integer newPosition,
+                                                Principal principal) {
+        return new ResponseEntity<>(taskService.updateInternalTaskPosition(boardId, taskId, internalTaskId, newPosition
+                , principal), HttpStatus.OK);
     }
 
     @PutMapping("/{boardId}/tasks/{taskId}/notificationConfiguration")

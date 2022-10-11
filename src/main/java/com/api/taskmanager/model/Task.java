@@ -40,16 +40,16 @@ public class Task extends AbstractEntity {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> memberList = new HashSet<>();
 
-    @OneToMany(mappedBy = "task", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "task", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<InternalTask> internalTasks = new HashSet<>();
 
     @Setter
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "dueDateId")
     private DueDate dueDate;
 
     @Setter
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "notificationConfigurationId")
     private NotificationConfiguration notificationConfiguration;
 
