@@ -122,11 +122,11 @@ public class PrincipalBoardManagementController {
         return new ResponseEntity<>(taskService.update(boardId, taskId, task, principal), HttpStatus.OK);
     }
 
-    @PutMapping("/{boardId}/tasks/{taskId}/duedate")
-    public ResponseEntity<?> updateTaskDueDate(@PathVariable(name = "boardId") UUID boardId,
-                                               @PathVariable(name = "taskId") UUID taskId,
-                                               @RequestBody DueDate dueDate, Principal principal) {
-        return new ResponseEntity<>(taskService.updateTaskDueDate(boardId, taskId, dueDate, principal),
+    @PutMapping("/{boardId}/tasks/{taskId}/deliveryDate")
+    public ResponseEntity<?> updateTaskDeliveryDate(@PathVariable(name = "boardId") UUID boardId,
+                                                    @PathVariable(name = "taskId") UUID taskId,
+                                                    @RequestBody DeliveryDate deliveryDate, Principal principal) {
+        return new ResponseEntity<>(taskService.updateTaskDeliveryDate(boardId, taskId, deliveryDate, principal),
                 HttpStatus.ACCEPTED);
     }
 

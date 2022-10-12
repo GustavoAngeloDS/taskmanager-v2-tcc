@@ -18,7 +18,7 @@ public class TaskDtoResponse {
     private Integer position;
     private Set<UserDtoResponse> memberList;
     private List<InternalTaskDtoResponse> internalTasks;
-    private DueDateDtoResponse dueDate;
+    private DeliveryDateDtoResponse deliveryDate;
     private NotificationConfigurationDtoResponse notificationConfiguration;
 
     public static TaskDtoResponse fromEntity(Task task) {
@@ -26,7 +26,7 @@ public class TaskDtoResponse {
                 task.getMemberList().stream().map(UserDtoResponse::fromEntity).collect(Collectors.toSet()),
                 task.getInternalTasks().stream().map(InternalTaskDtoResponse::fromEntity)
                         .sorted(Comparator.comparing(InternalTaskDtoResponse::getPosition))
-                        .collect(Collectors.toList()), DueDateDtoResponse.fromEntity(task.getDueDate()),
+                        .collect(Collectors.toList()), DeliveryDateDtoResponse.fromEntity(task.getDeliveryDate()),
                 NotificationConfigurationDtoResponse.fromEntity(task.getNotificationConfiguration()));
     }
 }

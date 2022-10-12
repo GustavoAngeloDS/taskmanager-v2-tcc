@@ -45,8 +45,8 @@ public class Task extends AbstractEntity {
 
     @Setter
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "dueDateId")
-    private DueDate dueDate;
+    @JoinColumn(name = "deliveryDateId")
+    private DeliveryDate deliveryDate;
 
     @Setter
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)

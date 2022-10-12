@@ -61,9 +61,7 @@ public class TaskService {
 
         task.setNotificationConfiguration(new NotificationConfiguration());
 
-        DueDate dueDate = new DueDate();
-        dueDate.setActive(false);
-        task.setDueDate(dueDate);
+        task.setDeliveryDate(new DeliveryDate());
 
         Task createdTask = taskRepository.save(task);
         return TaskDtoResponse.fromEntity(createdTask);
@@ -201,13 +199,14 @@ public class TaskService {
         taskRepository.save(task);
     }
 
-    public TaskDtoResponse updateTaskDueDate(UUID boardId, UUID taskId, DueDate dueDate, Principal principal) {
+    public TaskDtoResponse updateTaskDeliveryDate(UUID boardId, UUID taskId, DeliveryDate deliveryDate, Principal principal) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
         if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
 
-        task.getDueDate().setDate(dueDate.getDate());
-        task.getDueDate().setActive(dueDate.getActive());
+        task.getDeliveryDate().setDate(deliveryDate.getDate());
+        task.getDeliveryDate().setActive(deliveryDate.getActive());
+        task.getDeliveryDate().setAccomplished(deliveryDate.getAccomplished());
 
         return TaskDtoResponse.fromEntity(taskRepository.save(task));
     }
