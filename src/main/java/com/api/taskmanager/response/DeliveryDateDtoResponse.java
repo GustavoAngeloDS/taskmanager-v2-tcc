@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter
@@ -13,12 +13,13 @@ import java.util.UUID;
 @AllArgsConstructor
 public class DeliveryDateDtoResponse {
     private UUID id;
-    private Date date;
+    private LocalDate date;
+    private String time;
     private Boolean active;
     private Boolean accomplished;
 
     public static DeliveryDateDtoResponse fromEntity(DeliveryDate deliveryDate){
-        return new DeliveryDateDtoResponse(deliveryDate.getId(), deliveryDate.getDate(), deliveryDate.getActive(),
-                deliveryDate.getAccomplished());
+        return new DeliveryDateDtoResponse(deliveryDate.getId(), deliveryDate.getDate(), deliveryDate.getTime(),
+                deliveryDate.getActive(), deliveryDate.getAccomplished());
     }
 }

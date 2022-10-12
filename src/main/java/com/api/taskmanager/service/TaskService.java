@@ -207,6 +207,7 @@ public class TaskService {
         task.getDeliveryDate().setDate(deliveryDate.getDate());
         task.getDeliveryDate().setActive(deliveryDate.getActive());
         task.getDeliveryDate().setAccomplished(deliveryDate.getAccomplished());
+        task.getDeliveryDate().setTime(deliveryDate.getTime());
 
         return TaskDtoResponse.fromEntity(taskRepository.save(task));
     }

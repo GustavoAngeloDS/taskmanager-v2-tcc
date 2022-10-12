@@ -3,6 +3,7 @@ package com.api.taskmanager.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
@@ -14,7 +15,9 @@ public class DeliveryDate extends AbstractEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    private Date date;
+    private LocalDate date;
+
+    private String time;
 
     @Column(nullable = false)
     private Boolean active;
