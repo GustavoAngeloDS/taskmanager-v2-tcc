@@ -8,7 +8,6 @@ import lombok.Getter;
 public class EmailDto {
 
     private String ownerRef;
-    private String emailFrom;
     private String emailTo;
     private String subject;
     private String text;

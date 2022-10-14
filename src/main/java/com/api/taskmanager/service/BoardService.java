@@ -2,6 +2,7 @@ package com.api.taskmanager.service;
 
 import com.api.taskmanager.exception.TaskManagerCustomException;
 import com.api.taskmanager.model.Board;
+import com.api.taskmanager.model.BoardInvitation;
 import com.api.taskmanager.model.User;
 import com.api.taskmanager.repository.BoardRepository;
 import com.api.taskmanager.response.BoardDtoResponse;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.api.taskmanager.exception.TaskManagerCustomException.FORBIDDEN;
@@ -35,6 +37,15 @@ public class BoardService {
             boardDtoResponseList.add(BoardDtoResponse.fromEntity(board));
         });
         return boardDtoResponseList;
+    }
+
+    public void newMemberByInvitation(BoardInvitation boardInvitation) {
+        User user = userService.findByEmail(boardInvitation.getMemberEmail()).get();
+        Optional<Board> board = repository.findById(boardInvitation.getBoardId()) ;
+        if(board.isPresent()) {
+            board.get().getMemberList().add(user);
+            repository.save(board.get());
+        }
     }
 
     public BoardDtoResponse findById(UUID id, Principal principal) {

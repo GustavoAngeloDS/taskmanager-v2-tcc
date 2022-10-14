@@ -61,7 +61,6 @@ public class UserService implements UserDetailsService {
 
         user.setNickName(newUserData.getNickName());
         user.setPhoneNumber(newUserData.getPhoneNumber());
-        //user.setPassword(passwordEncoder.encode(newUserData.getPassword()));
 
         User updatedUser = repository.save(user);
         return new UserDtoResponse(updatedUser.getId(), updatedUser.getEmail(), updatedUser.getUsername(),
@@ -77,6 +76,10 @@ public class UserService implements UserDetailsService {
 
     public User findByUsername(String username) {
         return repository.findByUsername(username).get();
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return repository.findByEmail(email);
     }
 
     private boolean hasAccess(User user, Principal principal) {

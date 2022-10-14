@@ -16,8 +16,11 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().authorizeHttpRequests().antMatchers(HttpMethod.POST, "/users").permitAll().and()
-                .httpBasic()
+        http.cors().and().csrf()
+                .disable().authorizeHttpRequests()
+                .antMatchers(HttpMethod.POST, "/users").permitAll()
+                .antMatchers(HttpMethod.GET,"/board-invitation/accept-invite/**").permitAll()
+                .and().httpBasic()
                 .and()
                 .authorizeHttpRequests()
                 .anyRequest().authenticated();

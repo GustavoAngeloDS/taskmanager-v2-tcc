@@ -1,6 +1,7 @@
 package com.api.taskmanager.controller;
 
 import com.api.taskmanager.model.*;
+import com.api.taskmanager.service.BoardInvitationService;
 import com.api.taskmanager.service.BoardService;
 import com.api.taskmanager.service.StackService;
 import com.api.taskmanager.service.TaskService;
@@ -22,12 +23,15 @@ public class PrincipalBoardManagementController {
     private BoardService boardService;
     private StackService stackService;
     private TaskService taskService;
+    private BoardInvitationService boardInvitationService;
 
     @Autowired
-    PrincipalBoardManagementController(BoardService boardService, StackService stackService, TaskService taskService) {
+    PrincipalBoardManagementController(BoardService boardService, StackService stackService, TaskService taskService,
+                                       BoardInvitationService boardInvitationService) {
         this.boardService = boardService;
         this.stackService = stackService;
         this.taskService = taskService;
+        this.boardInvitationService = boardInvitationService;
     }
 
     @GetMapping

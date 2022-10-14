@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SenderConfig {
 
-    @Value("$rabbitmq.queue")
+    @Value("${rabbitmq.queue}")
     private String queueName;
 
     @Bean
