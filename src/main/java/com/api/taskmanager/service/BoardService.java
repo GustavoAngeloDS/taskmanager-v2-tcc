@@ -48,6 +48,16 @@ public class BoardService {
         }
     }
 
+    public BoardDtoResponse removeBoardMember(UUID boardId, String memberEmail, Principal principal) {
+        Board board = repository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+        if(!isOwner(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
+        User user = userService.findByEmail(memberEmail).orElseThrow(() -> new TaskManagerCustomException((ID_NOT_FOUND)));
+
+        if(board.getOwner().getId() != user.getId())
+            board.getMemberList().remove(user);
+        return BoardDtoResponse.fromEntity(repository.save(board));
+    }
+
     public BoardDtoResponse findById(UUID id, Principal principal) {
         Board board = repository.findById(id).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
         if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
@@ -86,5 +96,9 @@ public class BoardService {
     private boolean hasAccess(Board board, Principal principal) {
         return (board.getMemberList().stream().filter((member) -> (member.getUsername().equals(principal.getName())))
                 .count() > 0 || board.getOwner().getUsername().equals(principal.getName()));
+    }
+
+    private boolean isOwner(Board board, Principal principal) {
+        return board.getOwner().getUsername().equals(principal.getName());
     }
 }

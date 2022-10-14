@@ -61,6 +61,13 @@ public class PrincipalBoardManagementController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @DeleteMapping("/{boardId}/remove-member/{memberEmail}")
+    public ResponseEntity<?> removeBoard(@PathVariable(name = "boardId") UUID boardId,
+                                         @PathVariable(name = "memberEmail") String memberEmail, Principal principal) {
+
+        return new ResponseEntity<>(boardService.removeBoardMember(boardId, memberEmail, principal), HttpStatus.OK);
+    }
+
     @GetMapping("/{boardId}/stacks")
     public ResponseEntity<List<?>> findAllStacks(@PathVariable(name = "boardId") UUID boardId, Principal principal) {
         return new ResponseEntity<>(stackService.findAll(boardId, principal), HttpStatus.OK);
