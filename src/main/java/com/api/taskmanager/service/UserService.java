@@ -14,13 +14,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.time.Instant;
 import java.util.*;
 
 import static com.api.taskmanager.exception.TaskManagerCustomException.*;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService extends ObjectAuthorizationAbstractService implements UserDetailsService{
 
     private UserRepository repository;
     private PasswordEncoder passwordEncoder;
@@ -80,10 +79,6 @@ public class UserService implements UserDetailsService {
 
     public Optional<User> findByEmail(String email) {
         return repository.findByEmail(email);
-    }
-
-    private boolean hasAccess(User user, Principal principal) {
-        return principal.getName().equals(user.getUsername());
     }
 
     private void consistInputData(User user) {

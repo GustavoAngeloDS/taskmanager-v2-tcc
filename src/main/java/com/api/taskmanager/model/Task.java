@@ -34,6 +34,11 @@ public class Task extends AbstractEntity {
     private Stack stack;
 
     @Setter
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "tag_id")
+    private Tag tag;
+
+    @Setter
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "task_users",
             joinColumns = @JoinColumn(name = "task_id"),
@@ -52,5 +57,4 @@ public class Task extends AbstractEntity {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "notificationConfigurationId")
     private NotificationConfiguration notificationConfiguration;
-
 }

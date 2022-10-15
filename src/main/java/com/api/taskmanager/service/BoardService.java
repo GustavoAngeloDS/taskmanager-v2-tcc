@@ -19,7 +19,7 @@ import static com.api.taskmanager.exception.TaskManagerCustomException.FORBIDDEN
 import static com.api.taskmanager.exception.TaskManagerCustomException.ID_NOT_FOUND;
 
 @Service
-public class BoardService {
+public class BoardService extends ObjectAuthorizationAbstractService {
 
     private BoardRepository repository;
     private UserService userService;
@@ -91,14 +91,5 @@ public class BoardService {
         if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
 
         repository.delete(board);
-    }
-
-    private boolean hasAccess(Board board, Principal principal) {
-        return (board.getMemberList().stream().filter((member) -> (member.getUsername().equals(principal.getName())))
-                .count() > 0 || board.getOwner().getUsername().equals(principal.getName()));
-    }
-
-    private boolean isOwner(Board board, Principal principal) {
-        return board.getOwner().getUsername().equals(principal.getName());
     }
 }

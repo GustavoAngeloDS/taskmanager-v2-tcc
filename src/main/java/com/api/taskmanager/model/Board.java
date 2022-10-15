@@ -41,6 +41,9 @@ public class Board extends AbstractEntity {
     @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<Stack> stackList = new HashSet<>();
 
+    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private Set<Tag> tagList = new HashSet<>();
+
     public Board(String name, String description) {
         this.name = name;
         this.description = description;

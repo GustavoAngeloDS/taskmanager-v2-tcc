@@ -18,7 +18,7 @@ import java.util.UUID;
 import static com.api.taskmanager.exception.TaskManagerCustomException.FORBIDDEN;
 
 @Service
-public class BoardInvitationService {
+public class BoardInvitationService extends ObjectAuthorizationAbstractService {
 
     private BoardService boardService;
     private UserService userService;
@@ -71,10 +71,5 @@ public class BoardInvitationService {
                                 "www.localhost:5000/board-invitation/accept-invite/"+boardIdInvitation))
                 .build();
         return emailDto;
-    }
-
-    private boolean hasAccess(BoardDtoResponse board, Principal principal) {
-        return (board.getMemberList().stream().filter((member) -> (member.getUsername().equals(principal.getName())))
-                .count() > 0 || board.getOwner().getUsername().equals(principal.getName()));
     }
 }

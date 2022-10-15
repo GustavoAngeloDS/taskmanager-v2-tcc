@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import static com.api.taskmanager.exception.TaskManagerCustomException.*;
 
 @Service
-public class StackService {
+public class StackService extends ObjectAuthorizationAbstractService {
     private StackRepository stackRepository;
     private BoardRepository boardRepository;
 
@@ -103,10 +103,5 @@ public class StackService {
         Stack stack = stackRepository.findById(stackId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
 
         stackRepository.delete(stack);
-    }
-
-    private boolean hasAccess(Board board, Principal principal) {
-        return (board.getMemberList().stream().filter((member) -> (member.getUsername().equals(principal.getName())))
-                .count() > 0 || board.getOwner().getUsername().equals(principal.getName()));
     }
 }

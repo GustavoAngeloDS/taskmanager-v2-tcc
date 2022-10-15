@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import static com.api.taskmanager.exception.TaskManagerCustomException.*;
 
 @Service
-public class TaskService {
+public class TaskService extends ObjectAuthorizationAbstractService {
 
     private TaskRepository taskRepository;
     private BoardRepository boardRepository;
@@ -31,6 +31,16 @@ public class TaskService {
         this.stackRepository = stackRepository;
         this.userRepository = userRepository;
         this.internalTaskRepository = internalTaskRepository;
+    }
+
+    public void removeTagFromTasks(Tag tag, Principal principal) {
+        if(!hasAccess(tag, principal)) throw new TaskManagerCustomException(FORBIDDEN);
+
+        taskRepository.findAllByBoardId(tag.getBoard().getId()).stream().filter(task -> task.getTag() == tag)
+                .forEach(taskToRemoveTag -> {
+                    taskToRemoveTag.setTag(null);
+                    taskRepository.save(taskToRemoveTag);
+                });
     }
 
     public List<TaskDtoResponse> findAllByBoardId(UUID boardId, Principal principal) {
@@ -273,27 +283,10 @@ public class TaskService {
             }
         }
 
-//        Na stack antiga:
-//            Todos os itens que tiverem a posição maior da atual: -1
-//        Na nova stack:
-//            Todos os itens que tiverem a posição maior ou igual a nova posição: + 1
-
-
-//        Se a nova posicao for maior que a atual
-//                Todos os itens que tiverem a posição maior que a atual E que seja diferente da posição atual E inferiores OU iguais a nova posição: -1
-//        Se a nova posição for inferior a atual
-//                Todos os itens que tiverem a posição menor que a atual E que seja diferente da posição atual E superiores OU iguais a nova posição: +1
-
         List<TaskDtoResponse> taskDtoResponseList = taskRepository.findAllByBoardId(boardId).stream()
                 .map(TaskDtoResponse::fromEntity).collect(Collectors.toList());
 
         Collections.sort(taskDtoResponseList, Comparator.comparing(TaskDtoResponse::getPosition));
         return taskDtoResponseList;
     }
-
-    private boolean hasAccess(Board board, Principal principal) {
-        return (board.getMemberList().stream().filter((member) -> (member.getUsername().equals(principal.getName())))
-                .count() > 0 || board.getOwner().getUsername().equals(principal.getName()));
-    }
-
 }
