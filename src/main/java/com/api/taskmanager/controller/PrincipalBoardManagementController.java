@@ -1,10 +1,8 @@
 package com.api.taskmanager.controller;
 
 import com.api.taskmanager.model.*;
-import com.api.taskmanager.service.BoardInvitationService;
-import com.api.taskmanager.service.BoardService;
-import com.api.taskmanager.service.StackService;
-import com.api.taskmanager.service.TaskService;
+import com.api.taskmanager.response.TagDtoResponse;
+import com.api.taskmanager.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,15 +21,16 @@ public class PrincipalBoardManagementController {
     private BoardService boardService;
     private StackService stackService;
     private TaskService taskService;
-    private BoardInvitationService boardInvitationService;
+    private TagService tagService;
+
 
     @Autowired
     PrincipalBoardManagementController(BoardService boardService, StackService stackService, TaskService taskService,
-                                       BoardInvitationService boardInvitationService) {
+                                       TagService tagService) {
         this.boardService = boardService;
         this.stackService = stackService;
         this.taskService = taskService;
-        this.boardInvitationService = boardInvitationService;
+        this.tagService = tagService;
     }
 
     @GetMapping
@@ -219,11 +218,50 @@ public class PrincipalBoardManagementController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{boardId}/tasks/{stackId}/removeMember/{memberId}")
+    @DeleteMapping("/{boardId}/tasks/{taskId}/removeMember/{memberId}")
     public ResponseEntity<?> removeTaskMember(@PathVariable(name = "boardId") UUID boardId,
-                                              @PathVariable(name = "stackId") UUID stackId,
+                                              @PathVariable(name = "taskId") UUID stackId,
                                               @PathVariable(name = "memberId") UUID memberId, Principal principal) {
         taskService.removeTaskMember(boardId, stackId, memberId, principal);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/{boardId}/tasks/{taskId}/update-tag/{tagId}")
+    public ResponseEntity<?> updateTaskTag(@PathVariable(name = "boardId") UUID boardId,
+                                           @PathVariable(name = "taskId") UUID taskId,
+                                           @PathVariable(name = "tagId") UUID tagId, Principal principal) {
+        return new ResponseEntity<>(taskService.updateTaskTag(boardId, taskId, tagId, principal), HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/{boardId}/tags")
+    public ResponseEntity<List<TagDtoResponse>> findAllByBoard(@PathVariable(name = "boardId") UUID boardId,
+                                                               Principal principal) {
+        return new ResponseEntity<>(tagService.findAllByBoard(boardId, principal), HttpStatus.OK);
+    }
+
+    @GetMapping("/{boardId}/tags/{tagId}")
+    public ResponseEntity<TagDtoResponse> findById(@PathVariable(name = "boardId") UUID boardId,
+                                                   @PathVariable(name = "tagId") UUID tagId, Principal principal) {
+        return new ResponseEntity<>(tagService.findById(boardId, tagId, principal), HttpStatus.OK);
+    }
+
+    @PostMapping("/{boardId}/tags")
+    public ResponseEntity<TagDtoResponse> createTag(@PathVariable(name = "boardId") UUID boardId,
+                                                    @RequestBody Tag tag, Principal principal) {
+        return new ResponseEntity<>(tagService.createTag(boardId, tag, principal), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{boardId}/tags/{tagId}")
+    public ResponseEntity<TagDtoResponse> updateTag(@PathVariable(name = "boardId") UUID boardId,
+                                                    @PathVariable(name = "tagId") UUID tagId,
+                                                    @RequestBody Tag tag, Principal principal) {
+        return new ResponseEntity<>(tagService.updateTag(boardId, tagId, tag, principal), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{boardId}/tags/{tagId}")
+    public ResponseEntity<?> removeTag(@PathVariable(name = "boardId") UUID boardId,
+                                       @PathVariable(name = "tagId") UUID tagId, Principal principal) {
+        tagService.removeTag(boardId, tagId, principal);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

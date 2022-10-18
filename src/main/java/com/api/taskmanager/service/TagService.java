@@ -39,9 +39,10 @@ public class TagService extends ObjectAuthorizationAbstractService {
                 .collect(Collectors.toList());
     }
 
-    public TagDtoResponse findById(UUID tagId, Principal principal) {
+    public TagDtoResponse findById(UUID boardId, UUID tagId, Principal principal) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
         Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
-        if(!hasAccess(tag, principal)) throw new TaskManagerCustomException(FORBIDDEN);
+        if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
 
         return TagDtoResponse.fromEntity(tag);
     }
@@ -54,17 +55,19 @@ public class TagService extends ObjectAuthorizationAbstractService {
         return TagDtoResponse.fromEntity(tagRepository.save(newTag));
     }
 
-    public TagDtoResponse updateTag(UUID tagId, Tag newTagData, Principal principal) {
+    public TagDtoResponse updateTag(UUID boardId, UUID tagId, Tag newTagData, Principal principal) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
         Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
-        if(!hasAccess(tag, principal)) throw new TaskManagerCustomException(FORBIDDEN);
+        if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
 
         tag.setName(newTagData.getName());
         return TagDtoResponse.fromEntity(tagRepository.save(tag));
     }
 
-    public void removeTag(UUID tagId, Principal principal) {
+    public void removeTag(UUID boardId, UUID tagId, Principal principal) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
         Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
-        if(!hasAccess(tag, principal)) throw new TaskManagerCustomException(FORBIDDEN);
+        if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
 
         taskService.removeTagFromTasks(tag, principal);
         tagRepository.delete(tag);

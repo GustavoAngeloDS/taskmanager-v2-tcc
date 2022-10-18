@@ -22,15 +22,17 @@ public class TaskService extends ObjectAuthorizationAbstractService {
     private StackRepository stackRepository;
     private UserRepository userRepository;
     private InternalTaskRepository internalTaskRepository;
+    private TagRepository tagRepository;
 
     @Autowired
     public TaskService(TaskRepository taskRepository, BoardRepository boardRepository, StackRepository stackRepository,
-            UserRepository userRepository, InternalTaskRepository internalTaskRepository) {
+            UserRepository userRepository, InternalTaskRepository internalTaskRepository, TagRepository tagRepository) {
         this.taskRepository = taskRepository;
         this.boardRepository = boardRepository;
         this.stackRepository = stackRepository;
         this.userRepository = userRepository;
         this.internalTaskRepository = internalTaskRepository;
+        this.tagRepository = tagRepository;
     }
 
     public void removeTagFromTasks(Tag tag, Principal principal) {
@@ -75,6 +77,19 @@ public class TaskService extends ObjectAuthorizationAbstractService {
 
         Task createdTask = taskRepository.save(task);
         return TaskDtoResponse.fromEntity(createdTask);
+    }
+
+    public TaskDtoResponse updateTaskTag(UUID boardId, UUID taskId, UUID tagId, Principal principal) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+        if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+        Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
+
+        tag.getTaskList().add(task);
+        task.setTag(tag);
+
+        tagRepository.save(tag);
+        return TaskDtoResponse.fromEntity(taskRepository.save(task));
     }
 
     public TaskDtoResponse update(UUID boardId, UUID taskId, Task newTaskData, Principal principal) {
