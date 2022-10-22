@@ -94,8 +94,7 @@ public class PrincipalBoardManagementController {
     @DeleteMapping("/{boardId}/stacks/{stackId}")
     public ResponseEntity<?> removeStack(@PathVariable(name = "boardId") UUID boardId,
                                          @PathVariable(name = "stackId") UUID stackId, Principal principal) {
-        stackService.remove(boardId, stackId, principal);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(stackService.remove(boardId, stackId, principal), HttpStatus.OK);
     }
 
     @GetMapping("/{boardId}/tasks")

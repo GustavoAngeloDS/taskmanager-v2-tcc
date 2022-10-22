@@ -52,12 +52,15 @@ public class BoardInvitationService extends ObjectAuthorizationAbstractService {
     public void acceptInvitation(UUID invitationId) {
         Optional<BoardInvitation> optionalBoardInvitation = boardInvitationRepository.findById(invitationId);
 
-        if(optionalBoardInvitation.isPresent()) {
+        if(optionalBoardInvitation.isPresent() && optionalBoardInvitation.get()
+                .getInvitationStatus() == InvitationStatus.WAITING) {
             BoardInvitation boardInvitation = optionalBoardInvitation.get();
             boardInvitation.setInvitationStatus(InvitationStatus.ACCEPTED);
 
             boardInvitationRepository.save(boardInvitation);
             boardService.newMemberByInvitation(boardInvitation);
+        } else {
+            throw new TaskManagerCustomException("Solicite um novo convite. O utilizado não é válido.");
         }
     }
 

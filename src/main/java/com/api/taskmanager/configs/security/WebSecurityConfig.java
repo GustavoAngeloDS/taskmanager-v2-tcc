@@ -19,7 +19,7 @@ public class WebSecurityConfig {
         http.cors().and().csrf()
                 .disable().authorizeHttpRequests()
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
-                .antMatchers(HttpMethod.GET,"/board-invitation/accept-invite/**").permitAll()
+                .antMatchers(HttpMethod.PUT,"/board-invitation/accept-invite/**").permitAll()
                 .and().httpBasic()
                 .and()
                 .authorizeHttpRequests()

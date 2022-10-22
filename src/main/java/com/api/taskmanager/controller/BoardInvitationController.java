@@ -29,7 +29,7 @@ public class BoardInvitationController {
                 HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/accept-invite/{invitationId}")
+    @PutMapping("/accept-invite/{invitationId}")
     public ResponseEntity<?> acceptInvite(@PathVariable("invitationId") UUID invitationId) {
         boardInvitationService.acceptInvitation(invitationId);
         return new ResponseEntity<>(HttpStatus.OK);

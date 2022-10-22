@@ -97,11 +97,16 @@ public class StackService extends ObjectAuthorizationAbstractService {
         return StackDtoResponse.fromEntity(updatedStack);
     }
 
-    public void remove(UUID boardId, UUID stackId, Principal principal) {
+    public StackDtoResponse remove(UUID boardId, UUID stackId, Principal principal) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
         if(!hasAccess(board, principal)) throw new TaskManagerCustomException(FORBIDDEN);
         Stack stack = stackRepository.findById(stackId).orElseThrow(() -> new TaskManagerCustomException(ID_NOT_FOUND));
 
-        stackRepository.delete(stack);
+        if(stack.getTaskList().isEmpty()) {
+            stackRepository.delete(stack);
+            return null;
+        } else {
+            return StackDtoResponse.fromEntity(stack);
+        }
     }
 }
