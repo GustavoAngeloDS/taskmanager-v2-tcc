@@ -1,6 +1,6 @@
 package com.api.taskmanager.service;
 
-import com.api.taskmanager.Helper;
+import com.api.taskmanager.constants.Helper;
 import com.api.taskmanager.dto.EmailDto;
 import com.api.taskmanager.enums.InvitationStatus;
 import com.api.taskmanager.exception.TaskManagerCustomException;
@@ -15,6 +15,7 @@ import java.security.Principal;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.api.taskmanager.constants.DefaultValues.ACCEPT_INVITE_FRONTEND_URL;
 import static com.api.taskmanager.exception.TaskManagerCustomException.FORBIDDEN;
 
 @Service
@@ -68,11 +69,8 @@ public class BoardInvitationService extends ObjectAuthorizationAbstractService {
     private EmailDto createInvitationEmail(User user, String boardName, UUID boardIdInvitation) {
         EmailDto emailDto = EmailDto.builder()
                 .emailTo(user.getEmail())
-                .subject(Helper.EMAIL_SUBJECT)
-                .text(Helper.EMAIL_BODY
-                        .replace("[BOARD_NAME]", boardName)
-                        .replace("[LINK_URL]",
-                                "www.localhost:5000/board-invitation/accept-invite/"+boardIdInvitation))
+                .subject(String.format(Helper.EMAIL_SUBJECT, boardName))
+                .text(String.format(Helper.EMAIL_BODY, boardName, ACCEPT_INVITE_FRONTEND_URL+boardIdInvitation))
                 .build();
         return emailDto;
     }
