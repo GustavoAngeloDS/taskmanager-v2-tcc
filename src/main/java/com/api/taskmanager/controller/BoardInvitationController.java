@@ -31,7 +31,7 @@ public class BoardInvitationController {
 
     @PutMapping("/accept-invite/{invitationId}")
     public ResponseEntity<?> acceptInvite(@PathVariable("invitationId") UUID invitationId) {
-        boardInvitationService.acceptInvitation(invitationId);
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        return new ResponseEntity<>(boardInvitationService.acceptInvitation(invitationId), HttpStatus.OK);
     }
 }

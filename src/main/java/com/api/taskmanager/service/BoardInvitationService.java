@@ -49,7 +49,7 @@ public class BoardInvitationService extends ObjectAuthorizationAbstractService {
         return bi;
     }
 
-    public void acceptInvitation(UUID invitationId) {
+    public BoardInvitation acceptInvitation(UUID invitationId) {
         Optional<BoardInvitation> optionalBoardInvitation = boardInvitationRepository.findById(invitationId);
 
         if(optionalBoardInvitation.isPresent() && optionalBoardInvitation.get()
@@ -59,8 +59,9 @@ public class BoardInvitationService extends ObjectAuthorizationAbstractService {
 
             boardInvitationRepository.save(boardInvitation);
             boardService.newMemberByInvitation(boardInvitation);
+            return boardInvitation;
         } else {
-            throw new TaskManagerCustomException("Solicite um novo convite. O utilizado não é válido.");
+            return null;
         }
     }
 
