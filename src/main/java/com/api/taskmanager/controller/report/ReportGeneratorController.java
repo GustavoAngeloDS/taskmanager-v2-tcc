@@ -26,4 +26,9 @@ public class ReportGeneratorController {
     public ResponseEntity<List<?>> findStackTasksCount(@PathVariable(name = "boardId") UUID boardId) {
         return new ResponseEntity<>(reportGeneratorService.stackTasksCount(boardId), HttpStatus.OK);
     }
+
+    @GetMapping("/boardId/{boardId}/find-overdue-tasks-count")
+    public ResponseEntity<List<?>> findOverdueTasks(@PathVariable(name = "boardId") UUID boardId) {
+        return new ResponseEntity<>(reportGeneratorService.overDueTasksCount(boardId), HttpStatus.OK);
+    }
 }

@@ -26,4 +26,14 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
             "INNER JOIN stacks s ON t.stack_id = s.id " +
             "WHERE s.board_id = :boardId AND s.id = :stackId", nativeQuery = true)
     Integer findNextAvailablePositionByBoardAndStack(UUID boardId, UUID stackId);
+
+    @Query(value = "SELECT s.name, count(dd) FROM stacks s LEFT JOIN tasks t on t.stack_id = s.id " +
+            "LEFT JOIN delivery_date dd on t.delivery_date_id = dd.id " +
+            "AND (to_char(dd.date, 'YYYY-MM-DD') < to_char(current_timestamp, 'YYYY-MM-DD') " +
+            "OR to_char(dd.date, 'YYYY-MM-DD') = to_char(current_timestamp, 'YYYY-MM-DD') " +
+            "AND dd.time < to_char(current_timestamp, 'HH24:MI')) INNER JOIN boards b on s.board_id = b.id " +
+            "WHERE b.id = :boardId " +
+            "GROUP BY s.name, s.position " +
+            "ORDER BY s.position ASC", nativeQuery = true)
+    List<Object[]> findOverdueTasksCount(UUID boardId);
 }
