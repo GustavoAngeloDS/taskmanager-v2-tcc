@@ -69,8 +69,8 @@ public class BoardInvitationService extends ObjectAuthorizationAbstractService {
     private EmailDto createInvitationEmail(User user, String boardName, UUID boardIdInvitation) {
         EmailDto emailDto = EmailDto.builder()
                 .emailTo(user.getEmail())
-                .subject(String.format(Helper.EMAIL_SUBJECT, boardName))
-                .text(String.format(Helper.EMAIL_BODY, boardName, ACCEPT_INVITE_FRONTEND_URL+boardIdInvitation))
+                .subject(String.format(Helper.NEW_INVITATION_EMAIL_SUBJECT, boardName))
+                .text(String.format(Helper.NEW_INVITATION_EMAIL_BODY, boardName, ACCEPT_INVITE_FRONTEND_URL+boardIdInvitation))
                 .build();
         return emailDto;
     }

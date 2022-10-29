@@ -19,6 +19,8 @@ public class WebSecurityConfig {
         http.cors().and().csrf()
                 .disable().authorizeHttpRequests()
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/reset-password").permitAll()
+                .antMatchers(HttpMethod.PUT, "/users/reset-password/**").permitAll()
                 .antMatchers(HttpMethod.PUT,"/board-invitation/accept-invite/**").permitAll()
                 .and().httpBasic()
                 .and()

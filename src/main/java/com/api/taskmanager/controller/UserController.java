@@ -1,13 +1,13 @@
 package com.api.taskmanager.controller;
 
+import com.api.taskmanager.model.NewPassword;
+import com.api.taskmanager.model.PasswordResetRequest;
 import com.api.taskmanager.model.User;
 import com.api.taskmanager.service.UserService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -51,5 +51,18 @@ public class UserController {
     public ResponseEntity<?> removeUser(@PathVariable(name = "id") UUID id, Principal principal) {
         service.remove(id, principal);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> createPasswordResetRequest(@RequestBody PasswordResetRequest passwordResetRequest) {
+        service.createPasswordResetRequest(passwordResetRequest);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping("/reset-password/{passwordResetSolicitationId}")
+    public ResponseEntity<?> updateUserPassword(@PathVariable(name = "passwordResetSolicitationId") UUID id,
+                                                @RequestBody NewPassword newPassword) {
+        service.updatePassword(id, newPassword);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

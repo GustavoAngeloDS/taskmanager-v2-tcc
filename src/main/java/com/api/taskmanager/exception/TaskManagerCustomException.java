@@ -10,6 +10,7 @@ public class TaskManagerCustomException extends RuntimeException {
     public static final String USER_IS_NOT_MEMBER = "The user isn't a task member";
     public static final String INVALID_CREDENTIALS = "Invalid credentials";
     public static final String POSITION_IS_NOT_AVAILABLE = "The position is not available";
+    public static final String PASSWORD_REQUEST_INVALID = "The password request is not valid";
 
     public TaskManagerCustomException(String message) {
         super(message);
