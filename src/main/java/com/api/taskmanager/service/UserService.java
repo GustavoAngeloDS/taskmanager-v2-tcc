@@ -107,6 +107,9 @@ public class UserService extends ObjectAuthorizationAbstractService implements U
         User userToUpdate = repository.findByEmail(resetRequest.getUserEmail()).get();
         userToUpdate.setPassword(passwordEncoder.encode(newPassword.getPassword()));
         repository.save(userToUpdate);
+
+        resetRequest.setStatus(PasswordResetStatus.INACTIVE);
+        passwordResetRequestRepository.save(resetRequest);
     }
 
     public UserDtoResponse update(UUID id, User newUserData, Principal principal) {
