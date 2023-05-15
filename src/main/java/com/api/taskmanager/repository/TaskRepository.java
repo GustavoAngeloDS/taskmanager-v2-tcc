@@ -33,6 +33,7 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
             "OR to_char(dd.date, 'YYYY-MM-DD') = to_char(current_timestamp, 'YYYY-MM-DD') " +
             "AND dd.time < to_char(current_timestamp, 'HH24:MI')) INNER JOIN boards b on s.board_id = b.id " +
             "WHERE b.id = :boardId " +
+            "AND dd.accomplished = false " +
             "GROUP BY s.name, s.position " +
             "ORDER BY s.position ASC", nativeQuery = true)
     List<Object[]> findOverdueTasksCount(UUID boardId);
