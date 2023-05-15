@@ -233,6 +233,7 @@ public class TaskService extends ObjectAuthorizationAbstractService {
         task.getDeliveryDate().setActive(deliveryDate.getActive());
         task.getDeliveryDate().setAccomplished(deliveryDate.getAccomplished());
         task.getDeliveryDate().setTime(deliveryDate.getTime());
+        task.getNotificationConfiguration().setSent(false);
 
         return TaskDtoResponse.fromEntity(taskRepository.save(task));
     }

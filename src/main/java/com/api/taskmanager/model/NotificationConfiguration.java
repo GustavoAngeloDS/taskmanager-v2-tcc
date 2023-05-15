@@ -31,9 +31,13 @@ public class NotificationConfiguration {
     @OneToOne(mappedBy = "notificationConfiguration", fetch = FetchType.EAGER)
     private Task task;
 
+    @Setter
+    private boolean sent;
+
     public NotificationConfiguration(NotificationType notificationType, String title, String message) {
         this.notificationType = notificationType;
         this.title = title;
         this.message = message;
+        this.sent = false;
     }
 }

@@ -61,7 +61,7 @@ public class PrincipalBoardManagementController {
     }
 
     @DeleteMapping("/{boardId}/remove-member/{memberEmail}")
-    public ResponseEntity<?> removeBoard(@PathVariable(name = "boardId") UUID boardId,
+    public ResponseEntity<?> removeBoardMember(@PathVariable(name = "boardId") UUID boardId,
                                          @PathVariable(name = "memberEmail") String memberEmail, Principal principal) {
 
         return new ResponseEntity<>(boardService.removeBoardMember(boardId, memberEmail, principal), HttpStatus.OK);
@@ -233,13 +233,13 @@ public class PrincipalBoardManagementController {
     }
 
     @GetMapping("/{boardId}/tags")
-    public ResponseEntity<List<TagDtoResponse>> findAllByBoard(@PathVariable(name = "boardId") UUID boardId,
+    public ResponseEntity<List<TagDtoResponse>> findAllTagsByBoard(@PathVariable(name = "boardId") UUID boardId,
                                                                Principal principal) {
         return new ResponseEntity<>(tagService.findAllByBoard(boardId, principal), HttpStatus.OK);
     }
 
     @GetMapping("/{boardId}/tags/{tagId}")
-    public ResponseEntity<TagDtoResponse> findById(@PathVariable(name = "boardId") UUID boardId,
+    public ResponseEntity<TagDtoResponse> findTagsById(@PathVariable(name = "boardId") UUID boardId,
                                                    @PathVariable(name = "tagId") UUID tagId, Principal principal) {
         return new ResponseEntity<>(tagService.findById(boardId, tagId, principal), HttpStatus.OK);
     }
