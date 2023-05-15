@@ -31,7 +31,8 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
             "LEFT JOIN delivery_date dd on t.delivery_date_id = dd.id " +
             "AND (to_char(dd.date, 'YYYY-MM-DD') < to_char(current_timestamp, 'YYYY-MM-DD') " +
             "OR to_char(dd.date, 'YYYY-MM-DD') = to_char(current_timestamp, 'YYYY-MM-DD') " +
-            "AND dd.time < to_char(current_timestamp, 'HH24:MI')) INNER JOIN boards b on s.board_id = b.id " +
+            "AND dd.time < to_char(current_timestamp AT TIME ZONE 'America/Sao_Paulo', 'HH24:MI'))" +
+            "INNER JOIN boards b on s.board_id = b.id " +
             "WHERE b.id = :boardId " +
             "AND dd.accomplished = false " +
             "GROUP BY s.name, s.position " +
