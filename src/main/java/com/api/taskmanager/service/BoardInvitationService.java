@@ -26,7 +26,6 @@ public class BoardInvitationService extends ObjectAuthorizationAbstractService {
     private RabbitMqService rabbitMqService;
     private BoardInvitationRepository boardInvitationRepository;
 
-    @Autowired
     BoardInvitationService(BoardService boardService, UserService userService,
                            BoardInvitationRepository boardInvitationRepository, RabbitMqService rabbitMqService) {
         this.boardService = boardService;

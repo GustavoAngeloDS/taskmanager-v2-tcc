@@ -1,6 +1,6 @@
 SET TIMEZONE TO 'America/Sao_Paulo';
 
-INSERT INTO roles VALUES (1, CURRENT_TIMESTAMP, 'ROLE_USER');
+INSERT INTO roles VALUES (1, 'ROLE_USER');
 
 -- INSERT INTO users VALUES ('dfcfa272-4885-4801-a849-df07fc717627', CURRENT_TIMESTAMP, 'usuario1@gmail.com', 'User1', '$2a$10$SWKwPCSuAWFSldiX2HycLuwmDfMoJ7MkFcmwoJ8G.7lWoUrqkxIZ2'/*teste123*/, '41988556644', 'usuario1');
 -- INSERT INTO users VALUES ('dfcfa272-4885-4801-a849-df07fc717613', CURRENT_TIMESTAMP, 'usuario2@gmail.com', 'User2', '$2a$10$SWKwPCSuAWFSldiX2HycLuwmDfMoJ7MkFcmwoJ8G.7lWoUrqkxIZ2'/*teste123*/, '41988556644', 'usuario2');

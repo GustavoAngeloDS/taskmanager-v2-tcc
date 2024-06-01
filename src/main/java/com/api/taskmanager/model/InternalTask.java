@@ -2,7 +2,7 @@ package com.api.taskmanager.model;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.UUID;
 
 @Entity

@@ -2,7 +2,7 @@ package com.api.taskmanager.model;
 
 import lombok.Getter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 
 @Getter

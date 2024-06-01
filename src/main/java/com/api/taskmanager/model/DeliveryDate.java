@@ -2,7 +2,7 @@ package com.api.taskmanager.model;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
